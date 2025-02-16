@@ -15,7 +15,7 @@
               style="color: var(--color-text-3)"
               class="self-start p-0 cursor-pointer"
               size="large"
-              @click="$router.back()"
+              @click="$router.push('/overview/candidate')"
             >
               <template #icon> <icon-left /> </template>
               {{ $t('common.operation.back') }}
@@ -94,7 +94,14 @@
         </a-tabs>
       </div>
 
-      <div class="w-full p-4 absolute bottom-0 left-0 bg-[--color-bg-1]">
+      <div
+        class="w-full p-4 absolute bottom-0 left-0 bg-[--color-bg-1] flex justify-end"
+      >
+        <switchCandidateButtons
+          :cur-step="currentStep"
+          :current-group="applyStore.data.group"
+          :aid="applyStore.data.uid"
+        />
         <edit-buttons
           :candidates="[
             {
@@ -112,7 +119,7 @@
       </div>
     </div>
   </div>
-  <a-result v-else status="404" :title="$t('candidate.applicationNotFound')">
+  <!-- <a-result v-else status="404" :title="$t('candidate.applicationNotFound')">
     <template #extra>
       <a-space>
         <a-button
@@ -125,18 +132,23 @@
         }}</a-button>
       </a-space>
     </template>
-  </a-result>
+  </a-result> -->
+  <loadingSkeleton v-else />
 </template>
 
 <script setup lang="ts">
 import { computed, onActivated, onDeactivated } from 'vue';
 import { recruitSteps } from '@/constants/team';
 import useApplicationStore from '@/store/modules/application';
+import useRecruitmentStore from '@/store/modules/recruitment';
 import editButtons from '../candidate/components/edit-buttons.vue';
 import profile from './profile.vue';
 import BaseInfo from './base-info.vue';
+import loadingSkeleton from './loading-skeleton.vue';
+import switchCandidateButtons from './components/switch-candidate-buttons.vue';
 
 const applyStore = useApplicationStore();
+const recStore = useRecruitmentStore();
 
 const props = defineProps({
   id: {
@@ -145,9 +157,15 @@ const props = defineProps({
   },
 });
 
-onActivated(() => applyStore.getApplication(props.id));
+onActivated(() => {
+  applyStore.getApplication(props.id);
+  recStore.setBaseInfoActive(true);
+});
 
-onDeactivated(() => applyStore.resetApplication());
+onDeactivated(() => {
+  applyStore.resetApplication();
+  recStore.setBaseInfoActive(false);
+});
 
 const interviewTimes = computed(() => {
   const alloGroup = applyStore.data?.interview_allocations_group;

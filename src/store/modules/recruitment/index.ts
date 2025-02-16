@@ -27,6 +27,7 @@ const useRecruitmentStore = defineStore('recruitment', {
     data: [],
     currentRid: '',
     currentRec: undefined,
+    isBaseInfo: false,
   }),
   actions: {
     async getAllRecruitments() {
@@ -84,6 +85,9 @@ const useRecruitmentStore = defineStore('recruitment', {
     async createInterview(group: Group, data: CreateInterviewRequest) {
       const res = await createInterview(this.currentRid, group, data);
       return res.data;
+    },
+    setBaseInfoActive(active: boolean) {
+      this.isBaseInfo = active;
     },
   },
   getters: {
