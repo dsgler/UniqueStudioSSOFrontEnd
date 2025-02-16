@@ -9,6 +9,7 @@ export interface RecruitmentState {
   data: Recruitment[];
   currentRid: string;
   currentRec?: Recruitment;
+  isBaseInfo: boolean;
 }
 
 export type { Recruitment };
