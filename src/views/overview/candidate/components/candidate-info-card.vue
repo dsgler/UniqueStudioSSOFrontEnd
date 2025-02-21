@@ -25,33 +25,40 @@
                 {{ info.user_detail?.name || '' }}
               </a-typography-text>
             </a-link>
-            <a-tag v-if="info.rejected" color="red">{{
-              $t('common.status.rejected')
-            }}</a-tag>
-            <a-tag v-if="info.abandoned" color="gray">{{
-              $t('common.status.abandoned')
-            }}</a-tag>
+            <a-tag v-if="info.rejected" color="red">
+              {{ $t('common.status.rejected') }}
+            </a-tag>
+            <a-tag v-if="info.abandoned" color="gray">
+              {{ $t('common.status.abandoned') }}
+            </a-tag>
           </div>
-          <a-checkbox :value="info.uid"></a-checkbox>
+          <div class="flex items-center gap-2">
+            <a-tag v-if="info.is_quick" color="green">
+              {{ $t('common.user.Quick') }}
+            </a-tag>
+            <a-checkbox :value="info.uid"></a-checkbox>
+          </div>
         </div>
 
         <div class="flex justify-between text-xs pt-3">
           <div>
-            <span class="text-[--color-text-3] pr-1.5">{{
-              $t('common.user.gender')
-            }}</span>
-            <span>{{ $t(GenderMap[info.user_detail?.gender ?? 0]) }}</span>
+            <span class="text-[--color-text-3] pr-1.5">
+              {{ $t('common.user.gender') }}
+            </span>
+            <span>
+              {{ $t(GenderMap[info.user_detail?.gender ?? 0]) }}
+            </span>
           </div>
           <div>
-            <span class="text-[--color-text-3] pr-1.5">{{
-              $t('common.user.grade')
-            }}</span>
+            <span class="text-[--color-text-3] pr-1.5">
+              {{ $t('common.user.grade') }}
+            </span>
             <span>{{ info.grade }}</span>
           </div>
           <div>
-            <span class="text-[--color-text-3] pr-1.5">{{
-              $t('common.user.institute')
-            }}</span>
+            <span class="text-[--color-text-3] pr-1.5">
+              {{ $t('common.user.institute') }}
+            </span>
             <span>{{ info.institute }}</span>
           </div>
         </div>
