@@ -77,6 +77,7 @@ export default {
   'common.user.group': '组别',
   'common.user.interviewTime': '面试时间',
   'common.user.isQuick': '是否快通',
+  'common.user.Quick': '快通',
 
   'common.steps.SignUp': '报名',
   'common.steps.WrittenTest': '笔试',
