@@ -12,6 +12,7 @@ const useAppStore = defineStore('app', {
       this.$patch(partial);
     },
   },
+  persist: true,
 });
 
 export default useAppStore;

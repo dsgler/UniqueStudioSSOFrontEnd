@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import ArcoVue from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import router from './router';
@@ -10,6 +11,7 @@ import './styles/tailwind.css';
 // 全量引入样式
 // import '@arco-design/web-vue/dist/arco.css';
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
 const app = createApp(App);
 app.use(ArcoVue, {});
 app.use(ArcoVueIcon);

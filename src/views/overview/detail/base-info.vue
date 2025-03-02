@@ -40,12 +40,14 @@
           {{ $t('common.user.intro') }}
         </div>
         <div
+          ref="introDivRef"
           class="text-[--color-neutral-8] whitespace-pre-line"
           :class="{ 'line-clamp-3': !showIntroDetail }"
         >
           {{ applyStore.data!.intro }}
         </div>
         <div
+          v-if="isIntroCollapse"
           class="text-sm text-[rgb(var(--primary-6))] cursor-pointer"
           @click="showIntroDetail = !showIntroDetail"
         >
@@ -116,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watchEffect } from 'vue';
 import { GenderMap } from '@/constants/team';
 import useApplicationStore from '@/store/modules/application';
 import useWindowResize from '@/hooks/resize';
@@ -125,6 +127,14 @@ import comment from './comment.vue';
 const applyStore = useApplicationStore();
 const user = computed(() => applyStore.data?.user_detail);
 const showIntroDetail = ref(false);
+const introDivRef = ref<HTMLElement | null>(null);
+const isIntroCollapse = ref(false);
+watchEffect(() => {
+  if (introDivRef.value) {
+    isIntroCollapse.value =
+      introDivRef.value.scrollHeight > introDivRef.value.clientHeight;
+  }
+});
 
 const { widthType } = useWindowResize();
 </script>
