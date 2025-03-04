@@ -178,6 +178,7 @@ import { Group, InterviewType, Step } from '@/constants/team';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
 import NotificationModal from '@/views/components/notification-modal.vue';
 import useRecruitmentStore from '@/store/modules/recruitment';
+import { useAppStore } from '@/store';
 import useWindowResize from '@/hooks/resize';
 import { useI18n } from 'vue-i18n';
 import dayjs from 'dayjs';
@@ -185,11 +186,24 @@ import AllowcateModal from './allowcate-modal.vue';
 import DateManagementModal from './date-management-modal.vue';
 
 const recStore = useRecruitmentStore();
+const appStore = useAppStore();
+
 const { t } = useI18n();
 const { widthType, heightType } = useWindowResize();
 
-const interviewType = ref(InterviewType.Group);
-const currentGroup = ref(Group.Web);
+const interviewType = ref<InterviewType>(
+  appStore.interviewManagementInterviewType as InterviewType,
+);
+const currentGroup = ref<Group>(
+  appStore.interviewManagementCurrentGroup as Group,
+);
+watch(interviewType, () => {
+  appStore.interviewManagementInterviewType = interviewType.value;
+});
+watch(currentGroup, () => {
+  appStore.interviewManagementCurrentGroup = currentGroup.value;
+});
+
 const selectedKeys = ref<string[]>([]);
 watch([interviewType, currentGroup], () => {
   selectedKeys.value.length = 0;

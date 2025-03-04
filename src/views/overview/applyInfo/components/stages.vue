@@ -23,13 +23,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import useRecruitmentStore from '@/store/modules/recruitment';
+import { useAppStore } from '@/store';
 import { Group } from '@/constants/team';
 import rectChart from './charts/rect-chart.vue';
 
+const appStore = useAppStore();
 const recStore = useRecruitmentStore();
-const currentGroup = ref('pm');
+const currentGroup = ref(appStore.overviewApplyInfoCurrentGroup);
+watch(currentGroup, () => {
+  appStore.overviewApplyInfoCurrentGroup = currentGroup.value;
+});
+
 const groups = Object.values(Group).filter((x) => x !== Group.Unique);
 const groupMemberCounts = computed(
   () =>

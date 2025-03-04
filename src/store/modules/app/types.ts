@@ -16,5 +16,12 @@ export interface AppState {
   tabBar: boolean;
   menuFromServer: boolean;
   serverMenu: RouteRecordNormalized[];
+  overviewApplyInfoCurrentGroup: string;
+  overviewCandidateCurrentStep: number;
+  overviewCandidateCurrentGroup: string;
+  interviewScheduleCurrentGroup: string;
+  interviewScheduleSelectedDate: string;
+  interviewManagementInterviewType: string;
+  interviewManagementCurrentGroup: string;
   [key: string]: unknown;
 }

@@ -25,7 +25,7 @@
         <a-steps
           :current="currentStep - 8"
           changeable
-          @change="(x) => (currentStep = x + 8)"
+          @change="(x: number) => (currentStep = x + 8)"
         >
           <a-step
             class="step-fail"
@@ -55,15 +55,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { Group, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
+import { useAppStore } from '@/store';
 import candidateInfo from './components/candidate-info.vue';
 
 const recStore = useRecruitmentStore();
+const appStore = useAppStore();
 
-const currentStep = ref(1);
-const currentGroup = ref(Group.Web);
+const currentStep = ref(appStore.overviewCandidateCurrentStep);
+const currentGroup = ref(appStore.overviewCandidateCurrentGroup as Group);
+watch(currentStep, () => {
+  appStore.overviewCandidateCurrentStep = currentStep.value;
+});
+watch(currentGroup, () => {
+  appStore.overviewCandidateCurrentGroup = currentGroup.value;
+});
+
 const stepCnt = computed(() =>
   recruitSteps.map(
     ({ value }) =>

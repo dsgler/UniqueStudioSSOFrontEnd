@@ -13,5 +13,12 @@
   "device": "desktop",
   "tabBar": false,
   "menuFromServer": false,
-  "serverMenu": []
+  "serverMenu": [],
+  "overviewApplyInfoCurrentGroup":"pm",
+  "overviewCandidateCurrentStep":1,
+  "overviewCandidateCurrentGroup":"web",
+  "interviewScheduleCurrentGroup":"web",
+  "interviewScheduleSelectedDate":"2024-01-01",
+  "interviewManagementInterviewType":"common.steps.GroupInterview",
+  "interviewManagementCurrentGroup":"web"
 }

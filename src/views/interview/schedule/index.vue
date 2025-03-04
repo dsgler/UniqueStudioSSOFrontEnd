@@ -19,9 +19,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, provide } from 'vue';
+import { ref, computed, provide, watch } from 'vue';
 import { Group, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
+import { useAppStore } from '@/store';
 import dayjs from 'dayjs';
 import calender from './components/calendar.vue';
 import schedules from './components/schedules.vue';
@@ -62,9 +63,17 @@ const props = defineProps({
   },
 });
 
+const appStore = useAppStore();
 provide('formatToday', formatToday);
-const currentGroup = ref(Group.Web);
-const selectedDate = ref<string>('2024-01-01');
+const currentGroup = ref(appStore.interviewScheduleCurrentGroup as Group);
+const selectedDate = ref<string>(appStore.interviewScheduleSelectedDate);
+watch(currentGroup, () => {
+  appStore.interviewScheduleCurrentGroup = currentGroup.value;
+});
+watch(selectedDate, () => {
+  appStore.interviewScheduleSelectedDate = selectedDate.value;
+});
+
 const recStore = useRecruitmentStore();
 
 // 监听calendar组件的dateClick事件，更新选中日期
