@@ -26,6 +26,7 @@ export interface Application {
   group: Group;
   intro: string;
   is_quick: false;
+  is_project_c: false;
   referrer: string;
   resume: string;
   answer: string;

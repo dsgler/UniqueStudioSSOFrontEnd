@@ -36,6 +36,9 @@
             <a-tag v-if="info.is_quick" color="green">
               {{ $t('common.user.Quick') }}
             </a-tag>
+            <a-tag v-if="info.is_project_c" color="purple">
+              {{ $t('common.user.ProjectC') }}
+            </a-tag>
             <a-checkbox :value="info.uid"></a-checkbox>
           </div>
         </div>

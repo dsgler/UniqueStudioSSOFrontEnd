@@ -30,6 +30,11 @@
           <a-descriptions-item :label="$t('common.user.referrer')">
             {{ applyStore.data!.referrer || $t('common.void') }}
           </a-descriptions-item>
+          <a-descriptions-item :label="$t('common.user.isProjectC')">
+            {{
+              applyStore.data!.is_project_c ? $t('common.yes') : $t('common.no')
+            }}
+          </a-descriptions-item>
           <a-descriptions-item :label="$t('common.user.isQuick')">
             {{ applyStore.data!.is_quick ? $t('common.yes') : $t('common.no') }}
           </a-descriptions-item>

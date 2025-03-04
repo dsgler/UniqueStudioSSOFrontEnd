@@ -11,6 +11,7 @@ export interface UpdateApplicationRequest {
   intro?: string;
   referrer?: string;
   is_quick?: boolean;
+  is_project_c?: boolean;
   resume?: File;
 }
 
