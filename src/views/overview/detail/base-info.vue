@@ -46,11 +46,12 @@
         </div>
         <div
           class="text-[--color-neutral-8] whitespace-pre-line"
-          :class="{ 'line-clamp-3': !showIntroDetail }"
+          :class="{ 'line-clamp-3': !showIntroDetail && isTextOverflow }"
         >
           {{ applyStore.data!.intro }}
         </div>
         <div
+          v-if="isTextOverflow"
           class="text-sm text-[rgb(var(--primary-6))] cursor-pointer"
           @click="showIntroDetail = !showIntroDetail"
         >
@@ -130,6 +131,14 @@ import comment from './comment.vue';
 const applyStore = useApplicationStore();
 const user = computed(() => applyStore.data?.user_detail);
 const showIntroDetail = ref(false);
+
+// 文本超过多少字符时显示"查看更多"按钮
+const TEXT_LIMIT = 100;
+
+const isTextOverflow = computed(() => {
+  const introText = applyStore.data?.intro || '';
+  return introText.length > TEXT_LIMIT;
+});
 
 const { widthType } = useWindowResize();
 </script>
