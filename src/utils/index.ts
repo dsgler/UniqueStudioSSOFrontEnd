@@ -24,15 +24,54 @@ export const regexUrl = new RegExp(
 
 export const downloadFile = (data: Blob, fileName: string) => {
   const url = window.URL.createObjectURL(data);
-  let a: HTMLAnchorElement | null = document.createElement('a');
-  a.style.setProperty('display', 'none');
-  a.download = fileName;
-  a.href = url;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  a = null;
-  window.URL.revokeObjectURL(url);
+
+  // web
+  try {
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    // 给一定时间执行下载
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+    }, 100);
+
+    return; // success
+  } catch (e) {
+    // throw new Error(`web下载失败: ${e}`);
+  }
+
+  // iframe兼容部分app的WebView
+  try {
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = url;
+    document.body.appendChild(iframe);
+
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+      window.URL.revokeObjectURL(url);
+    }, 2000);
+
+    return;
+  } catch (e) {
+    // throw new Error(`iframe下载失败: ${e}`);
+  }
+
+  // 兜底方案
+  try {
+    window.open(url, '_blank');
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+    }, 5000);
+  } catch (e) {
+    // throw new Error(`下载失败: ${e}`);
+    window.URL.revokeObjectURL(url);
+  }
 };
 
 export const getRecruitmentName = (t: (x: string) => string, name: string) => {
