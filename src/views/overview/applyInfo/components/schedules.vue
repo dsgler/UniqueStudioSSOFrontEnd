@@ -32,7 +32,7 @@
             class="block list-none p-3"
           >
             <div class="flex justify-between">
-              <div class="flex">
+              <div class="flex items-center">
                 <div
                   class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 mr-3 flex items-center justify-center"
                 >
@@ -42,7 +42,7 @@
                   schedule.name
                 }}</span>
               </div>
-              <span class="text-blue-600 mr-8">{{ schedule.time }}</span>
+              <span class="text-blue-600 mr-8 mt-4">{{ schedule.time }}</span>
             </div>
           </li>
         </div>
