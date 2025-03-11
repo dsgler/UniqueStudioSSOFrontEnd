@@ -42,7 +42,7 @@
                   schedule.name
                 }}</span>
               </div>
-              <span class="text-blue-600 mr-8 mt-3">{{ schedule.time }}</span>
+              <span class="text-blue-600 mr-8 mt-5">{{ schedule.time }}</span>
             </div>
           </li>
         </div>
