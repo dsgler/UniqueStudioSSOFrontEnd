@@ -8,7 +8,7 @@
         v-for="comment in applyStore.data?.comments?.flat() ?? []"
         :key="comment.uid"
         :class="[
-          'group py-1.5 px-2.5 text-sm text-[--color-neutral-8]',
+          'group py-1.5 px-2.5 text-sm text-[--color-neutral-10]',
           EvaluationMap[comment.evaluation].className,
           isMultiline(
             `${EvaluationMap[comment.evaluation].emoji} ${comment.member_name}${
