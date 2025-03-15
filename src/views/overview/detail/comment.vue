@@ -38,10 +38,10 @@
     <div class="flex pt-4 text-sm flex-nowrap">
       <a-select v-model="curComment.evaluation" class="w-min" :bordered="false">
         <a-option
-          v-for="(item, index) in EvaluationMap"
-          :key="item.emoji"
-          :value="index"
-          >{{ item.emoji || $t('common.void') }}</a-option
+          v-for="(value, key) in EvaluationMap"
+          :key="key"
+          :value="Number(key)"
+          >{{ value.emoji || $t('common.void') }}</a-option
         >
       </a-select>
       <a-input
