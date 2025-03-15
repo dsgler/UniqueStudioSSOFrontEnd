@@ -58,15 +58,7 @@ export enum Evaluation {
   Bad = 3,
 }
 
-export const EvaluationMap: Record<
-  Evaluation,
-  { emoji: string; className: string }
-> = {
-  [Evaluation.Undefined]: { emoji: '', className: '' },
-  [Evaluation.Good]: { emoji: '😘', className: 'bg-[rgb(var(--success-6))]' },
-  [Evaluation.Normal]: { emoji: '🤔', className: 'bg-[rgb(var(--warning-6))]' },
-  [Evaluation.Bad]: { emoji: '😅', className: 'bg-[rgb(var(--error-6))]' },
-};
+export const EvaluationMap = ['', '😘', '🤔', '😅'];
 
 export enum Step {
   SignUp = 'SignUp', // 报名
