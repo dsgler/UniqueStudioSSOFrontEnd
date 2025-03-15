@@ -41,7 +41,7 @@
           v-for="(item, index) in EvaluationMap"
           :key="item.emoji"
           :value="index"
-          >{{ item || $t('common.void') }}</a-option
+          >{{ item.emoji || $t('common.void') }}</a-option
         >
       </a-select>
       <a-input
