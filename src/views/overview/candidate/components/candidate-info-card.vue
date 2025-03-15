@@ -68,8 +68,12 @@
       </template>
       <div class="flex justify-between">
         <div class="flex gap-2">
-          <template v-for="[item, cnt] in EvaluationCnt" :key="item">
-            <a-tag v-if="cnt" color="gray" class="text-xs rounded-full px-2.5">
+          <template v-for="[item, cnt, className] in EvaluationCnt" :key="item">
+            <a-tag
+              v-if="cnt"
+              :class="className"
+              class="text-xs rounded-full px-2.5"
+            >
               <template #icon> {{ item }} </template>
               {{ cnt }}
             </a-tag>
@@ -107,11 +111,15 @@ const props = defineProps({
 });
 
 const EvaluationCnt = computed(() =>
-  EvaluationMap.map((x, i) => [
-    x,
-    props.info.comments?.filter(({ evaluation }) => evaluation === i)?.length ??
-      0,
-  ]).slice(1),
+  Object.entries(EvaluationMap)
+    .filter(([key]) => Number(key) !== 0) // 过滤掉 Undefined 评价
+    .map(([key, value]) => [
+      value.emoji,
+      props.info.comments?.filter(
+        ({ evaluation }) => evaluation === Number(key),
+      )?.length ?? 0,
+      value.className,
+    ]),
 );
 </script>
 
