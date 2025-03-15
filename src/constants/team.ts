@@ -63,9 +63,9 @@ export const EvaluationMap: Record<
   { emoji: string; className: string }
 > = {
   [Evaluation.Undefined]: { emoji: '', className: '' },
-  [Evaluation.Good]: { emoji: '😘', className: 'bg-[--success-6]' },
-  [Evaluation.Normal]: { emoji: '🤔', className: 'bg-[--warning-6]' },
-  [Evaluation.Bad]: { emoji: '😅', className: 'bg-[--danger-6]' },
+  [Evaluation.Good]: { emoji: '😘', className: 'bg-green-600' },
+  [Evaluation.Normal]: { emoji: '🤔', className: 'bg-orange-600' },
+  [Evaluation.Bad]: { emoji: '😅', className: 'bg-red-600' },
 };
 
 export enum Step {
