@@ -36,7 +36,7 @@ const getStepCounts = computed(() => {
 });
 
 const option = computed(() => {
-  return {
+  const ret = {
     xAxis: {
       show: false,
     },
@@ -145,6 +145,8 @@ const option = computed(() => {
       },
     ],
   };
+  ret.series = ret.series.filter((v) => v.data[0] !== 0);
+  return ret;
 });
 
 const initChart = () => {
