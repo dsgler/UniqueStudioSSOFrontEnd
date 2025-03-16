@@ -36,7 +36,7 @@ const getStepCounts = computed(() => {
 });
 
 const option = computed(() => {
-  const ret = {
+  return {
     xAxis: {
       show: false,
     },
@@ -49,12 +49,12 @@ const option = computed(() => {
     },
     legend: {
       data: [
-        // t('common.steps.SignUp'),
-        // t('common.steps.WrittenTest'),
-        // t('common.steps.GroupInterview'),
-        // t('common.steps.StressTest'),
-        // t('common.steps.TeamInterview'),
-        // t('common.steps.Pass'),
+        t('common.steps.SignUp'),
+        t('common.steps.WrittenTest'),
+        t('common.steps.GroupInterview'),
+        t('common.steps.StressTest'),
+        t('common.steps.TeamInterview'),
+        t('common.steps.Pass'),
       ],
       bottom: 10,
       itemGap: 10,
@@ -145,13 +145,12 @@ const option = computed(() => {
       },
     ],
   };
-  ret.series = ret.series.filter((v) => v.data[0] !== 0);
-  ret.legend.data = ret.series.map((v) => v.name) as any;
-  return ret;
 });
 
 const initChart = () => {
   resizeChart();
+  console.log(option.value);
+
   myChart?.setOption(option.value);
 };
 
