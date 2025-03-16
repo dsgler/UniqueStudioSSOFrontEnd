@@ -64,7 +64,7 @@ const option = computed(() => {
       },
     },
     series: [
-      {
+      getStepCounts.value(Step.SignUp) > 0 && {
         data: [getStepCounts.value(Step.SignUp)],
         type: 'bar',
         name: t('common.steps.SignUp'),
@@ -76,7 +76,7 @@ const option = computed(() => {
           borderWidth: 5,
         },
       },
-      {
+      getStepCounts.value(Step.WrittenTest) && {
         data: [getStepCounts.value(Step.WrittenTest)],
         type: 'bar',
         name: t('common.steps.WrittenTest'),
@@ -87,7 +87,11 @@ const option = computed(() => {
           borderWidth: 5,
         },
       },
-      {
+      getStepCounts.value(
+        Step.GroupInterview,
+        Step.GroupTimeSelection,
+        Step.OnlineGroupInterview,
+      ) > 0 && {
         data: [
           getStepCounts.value(
             Step.GroupInterview,
@@ -104,7 +108,7 @@ const option = computed(() => {
           borderWidth: 5,
         },
       },
-      {
+      getStepCounts.value(Step.StressTest) > 0 && {
         data: [getStepCounts.value(Step.StressTest)],
         type: 'bar',
         name: t('common.steps.StressTest'),
@@ -115,7 +119,11 @@ const option = computed(() => {
           borderWidth: 5,
         },
       },
-      {
+      getStepCounts.value(
+        Step.TeamInterview,
+        Step.TeamTimeSelection,
+        Step.OnlineTeamInterview,
+      ) > 0 && {
         data: [
           getStepCounts.value(
             Step.TeamInterview,
@@ -132,7 +140,7 @@ const option = computed(() => {
           borderWidth: 5,
         },
       },
-      {
+      getStepCounts.value(Step.Pass) > 0 && {
         data: [getStepCounts.value(Step.Pass)],
         type: 'bar',
         name: t('common.steps.Pass'),
