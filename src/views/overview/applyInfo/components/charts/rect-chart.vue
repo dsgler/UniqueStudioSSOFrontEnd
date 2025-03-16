@@ -143,7 +143,7 @@ const option = computed(() => {
           borderWidth: 5,
         },
       },
-    ].filter((v) => v.data[0] !== 0),
+    ],
   };
 });
 
