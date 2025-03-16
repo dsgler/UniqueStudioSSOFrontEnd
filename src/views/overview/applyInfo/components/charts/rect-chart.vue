@@ -143,15 +143,13 @@ const option = computed(() => {
           borderWidth: 5,
         },
       },
-    ],
+    ].filter((v) => v.data[0] !== 0),
   };
 });
 
 const initChart = () => {
   resizeChart();
-  console.log(option.value);
-
-  myChart?.setOption(option.value);
+  myChart?.setOption(option.value, true);
 };
 
 watch(
