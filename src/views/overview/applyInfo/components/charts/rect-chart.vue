@@ -35,92 +35,8 @@ const getStepCounts = computed(() => {
   };
 });
 
-const series = computed(() => {
-  return [
-    {
-      data: [getStepCounts.value(Step.SignUp)],
-      type: 'bar',
-      name: t('common.steps.SignUp'),
-      stack: 'x',
-      barWidth: 40,
-      itemStyle: {
-        borderRadius: [10, 10, 10, 10],
-        borderColor: '#fff',
-        borderWidth: 5,
-      },
-    },
-    {
-      data: [getStepCounts.value(Step.WrittenTest)],
-      type: 'bar',
-      name: t('common.steps.WrittenTest'),
-      stack: 'x',
-      itemStyle: {
-        borderRadius: [10, 10, 10, 10],
-        borderColor: '#fff',
-        borderWidth: 5,
-      },
-    },
-    {
-      data: [
-        getStepCounts.value(
-          Step.GroupInterview,
-          Step.GroupTimeSelection,
-          Step.OnlineGroupInterview,
-        ),
-      ],
-      type: 'bar',
-      name: t('common.steps.GroupInterview'),
-      stack: 'x',
-      itemStyle: {
-        borderRadius: [10, 10, 10, 10],
-        borderColor: '#fff',
-        borderWidth: 5,
-      },
-    },
-    {
-      data: [getStepCounts.value(Step.StressTest)],
-      type: 'bar',
-      name: t('common.steps.StressTest'),
-      stack: 'x',
-      itemStyle: {
-        borderRadius: [10, 10, 10, 10],
-        borderColor: '#fff',
-        borderWidth: 5,
-      },
-    },
-    {
-      data: [
-        getStepCounts.value(
-          Step.TeamInterview,
-          Step.TeamTimeSelection,
-          Step.OnlineTeamInterview,
-        ),
-      ],
-      type: 'bar',
-      name: t('common.steps.TeamInterview'),
-      stack: 'x',
-      itemStyle: {
-        borderRadius: [10, 10, 10, 10],
-        borderColor: '#fff',
-        borderWidth: 5,
-      },
-    },
-    {
-      data: [getStepCounts.value(Step.Pass)],
-      type: 'bar',
-      name: t('common.steps.Pass'),
-      stack: 'x',
-      itemStyle: {
-        borderRadius: [10, 10, 10, 10],
-        borderColor: '#fff',
-        borderWidth: 5,
-      },
-    },
-  ].filter((v) => v.data[0] !== 0);
-});
-
 const option = computed(() => {
-  const ret = {
+  return {
     xAxis: {
       show: false,
     },
@@ -133,12 +49,12 @@ const option = computed(() => {
     },
     legend: {
       data: [
-        // t('common.steps.SignUp'),
-        // t('common.steps.WrittenTest'),
-        // t('common.steps.GroupInterview'),
-        // t('common.steps.StressTest'),
-        // t('common.steps.TeamInterview'),
-        // t('common.steps.Pass'),
+        t('common.steps.SignUp'),
+        t('common.steps.WrittenTest'),
+        t('common.steps.GroupInterview'),
+        t('common.steps.StressTest'),
+        t('common.steps.TeamInterview'),
+        t('common.steps.Pass'),
       ],
       bottom: 10,
       itemGap: 10,
@@ -147,11 +63,91 @@ const option = computed(() => {
         color: '#a9aeb8',
       },
     },
-    series: series.value,
+    series: [
+      {
+        data: [getStepCounts.value(Step.SignUp)],
+        type: 'bar',
+        name: t('common.steps.SignUp'),
+        stack: 'x',
+        barWidth: 40,
+        itemStyle: {
+          borderRadius: [10, 10, 10, 10],
+          borderColor: '#fff',
+          borderWidth: 5,
+        },
+      },
+      {
+        data: [getStepCounts.value(Step.WrittenTest)],
+        type: 'bar',
+        name: t('common.steps.WrittenTest'),
+        stack: 'x',
+        itemStyle: {
+          borderRadius: [10, 10, 10, 10],
+          borderColor: '#fff',
+          borderWidth: 5,
+        },
+      },
+      {
+        data: [
+          getStepCounts.value(
+            Step.GroupInterview,
+            Step.GroupTimeSelection,
+            Step.OnlineGroupInterview,
+          ),
+        ],
+        type: 'bar',
+        name: t('common.steps.GroupInterview'),
+        stack: 'x',
+        itemStyle: {
+          borderRadius: [10, 10, 10, 10],
+          borderColor: '#fff',
+          borderWidth: 5,
+        },
+      },
+      {
+        data: [getStepCounts.value(Step.StressTest)],
+        type: 'bar',
+        name: t('common.steps.StressTest'),
+        stack: 'x',
+        itemStyle: {
+          borderRadius: [10, 10, 10, 10],
+          borderColor: '#fff',
+          borderWidth: 5,
+        },
+      },
+      {
+        data: [
+          getStepCounts.value(
+            Step.TeamInterview,
+            Step.TeamTimeSelection,
+            Step.OnlineTeamInterview,
+          ),
+        ],
+        type: 'bar',
+        name: t('common.steps.TeamInterview'),
+        stack: 'x',
+        itemStyle: {
+          borderRadius: [10, 10, 10, 10],
+          borderColor: '#fff',
+          borderWidth: 5,
+        },
+      },
+      {
+        data: [getStepCounts.value(Step.Pass)],
+        type: 'bar',
+        name: t('common.steps.Pass'),
+        stack: 'x',
+        itemStyle: {
+          borderRadius: [10, 10, 10, 10],
+          borderColor: '#fff',
+          borderWidth: 5,
+        },
+      },
+    ].filter((v) => v.data[0] !== 0),
   };
   // ret.series = ret.series.filter((v) => v.data[0] !== 0);
-  ret.legend.data = ret.series.map((v) => v.name) as any;
-  return ret;
+  // ret.legend.data = ret.series.map((v) => v.name) as any;
+  // return ret;
 });
 
 const initChart = () => {
