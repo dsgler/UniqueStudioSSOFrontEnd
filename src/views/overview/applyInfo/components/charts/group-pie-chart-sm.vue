@@ -32,20 +32,12 @@ const resizeChart = () => {
 
 const recruitmentData = computed(() => recStore.currentRec);
 
-const allGroupMemberCounts = computed(() => {
-  return Object.values(recruitmentData.value?.group_details as any[]).reduce(
-    (sum, val) => sum + val,
-    0,
-  );
-});
-
 const groupMemberCounts = computed(() => {
   return (targetGroup: string) => {
     // 在group_details加上可选链后仍报错：对象可能为“未定义”，暂无法解决
     return recruitmentData.value?.group_details
       ? // @ts-ignore
-        recruitmentData.value.group_details[targetGroup as keyof GroupDetails] /
-          allGroupMemberCounts.value
+        recruitmentData.value.group_details[targetGroup as keyof GroupDetails]
       : 0;
   };
 });
@@ -69,7 +61,7 @@ const option = computed(() => {
       },
     },
     tooltip: {
-      formatter: '{b} : {d}%',
+      trigger: 'item',
     },
     series: [
       {
