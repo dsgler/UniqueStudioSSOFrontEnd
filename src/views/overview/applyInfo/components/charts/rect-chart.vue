@@ -145,13 +145,12 @@ const option = computed(() => {
       },
     ].filter((v) => v.data[0] !== 0),
   };
-  // ret.series = ret.series.filter((v) => v.data[0] !== 0);
-  // ret.legend.data = ret.series.map((v) => v.name) as any;
-  // return ret;
 });
 
 const initChart = () => {
   resizeChart();
+  console.log(option.value);
+
   myChart?.setOption(option.value);
 };
 
