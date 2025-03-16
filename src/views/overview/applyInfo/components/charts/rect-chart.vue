@@ -150,7 +150,7 @@ const option = computed(() => {
 const initChart = () => {
   resizeChart();
   console.log(option.value);
-  myChart?.setOption(option.value);
+  myChart?.setOption(option.value, true);
   console.log(myChart?.getOption());
 };
 
