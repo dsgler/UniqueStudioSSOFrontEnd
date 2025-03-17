@@ -29,7 +29,7 @@ const applicationCounts = computed(() => {
     return recruitmentData.value?.applications
       ? recruitmentData.value.applications.filter(({ group }) => {
           return group === targetGroup;
-        }).length / allApplicationCounts.value!
+        }).length
       : 0;
   };
 });
@@ -44,7 +44,7 @@ const createDataObject = (group: string, name: string) => {
 const option = computed(() => {
   return {
     tooltip: {
-      formatter: '{b} : {d}%',
+      trigger: 'item',
     },
     title: {
       text: t('common.applyInfo.candidates'),
