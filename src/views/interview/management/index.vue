@@ -236,7 +236,7 @@ const data = computed(() =>
       const interviewData =
         interviewType.value === InterviewType.Group ? alloGroup : alloTeam;
 
-      return {
+      const ret = {
         key: ind.toString(),
         name: app.user_detail?.name ?? '',
         interviewTime:
@@ -250,6 +250,29 @@ const data = computed(() =>
         aid: app.uid,
         step: app.step,
       };
+      if (
+        ret.interviewTime === t('common.status.waitForDistribution') &&
+        app.interview_selections &&
+        app.interview_selections.length !== 0
+      ) {
+        ret.name = `💡${ret.name}`;
+      }
+      return ret;
+    })
+    // 将未分配的放在最前面
+    .sort((a, b) => {
+      const waitForDistribution = t('common.status.waitForDistribution');
+      if (
+        a.interviewTime === waitForDistribution &&
+        b.interviewTime !== waitForDistribution
+      )
+        return -1;
+      if (
+        a.interviewTime !== waitForDistribution &&
+        b.interviewTime === waitForDistribution
+      )
+        return -1;
+      return 0;
     }),
 );
 
