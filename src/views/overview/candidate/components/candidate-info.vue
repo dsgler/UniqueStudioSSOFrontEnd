@@ -51,7 +51,7 @@
     class="grid gap-x-4 gap-y-3 overflow-y-auto pb-5 max-sm:shrink sm:grow"
     style="
       scrollbar-width: thin;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     "
     @change="handleChange"
   >
