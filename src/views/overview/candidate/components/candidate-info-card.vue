@@ -6,12 +6,6 @@
       size="small"
       hoverable
       :header-style="{ height: 'auto' }"
-      :style="{
-        boxShadow:
-          curstep === 2 && info.answer
-            ? 'inset rgba(3, 102, 214, 0.3) 0px 0px 1px 2px'
-            : undefined,
-      }"
     >
       <template #title>
         <div class="flex justify-between w-full">
@@ -36,6 +30,17 @@
             </a-tag>
             <a-tag v-if="info.abandoned" color="gray">
               {{ $t('common.status.abandoned') }}
+            </a-tag>
+            <a-tag
+              v-if="
+                curstep === 2 &&
+                info.answer &&
+                !info.abandoned &&
+                !info.rejected
+              "
+              color="green"
+            >
+              {{ '笔试✅' }}
             </a-tag>
           </div>
           <div class="flex items-center gap-2">
