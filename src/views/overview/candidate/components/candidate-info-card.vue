@@ -6,6 +6,12 @@
       size="small"
       hoverable
       :header-style="{ height: 'auto' }"
+      :style="{
+        boxShadow:
+          curstep === 2 && info.answer
+            ? 'inset rgba(3, 102, 214, 0.3) 0px 0px 1px 2px'
+            : undefined,
+      }"
     >
       <template #title>
         <div class="flex justify-between w-full">
@@ -107,6 +113,10 @@ const props = defineProps({
   checked: {
     type: Boolean,
     default: false,
+  },
+  curstep: {
+    type: Number,
+    default: 1,
   },
 });
 

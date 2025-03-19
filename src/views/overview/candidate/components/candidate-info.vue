@@ -57,6 +57,7 @@
       :key="candidate.uid"
       :info="candidate"
       :checked="selectedApplications.includes(candidate.uid)"
+      :curstep="curStep"
     ></candidate-info-card>
   </a-checkbox-group>
   <div
