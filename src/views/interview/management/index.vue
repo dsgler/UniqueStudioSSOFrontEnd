@@ -230,6 +230,32 @@ const data = computed(() =>
       }
       return app.user_detail?.name.includes(searchValue.value);
     })
+    .sort((app1, app2) => {
+      const alloGroup1 = app1.interview_allocations_group;
+      const alloTeam1 = app1.interview_allocations_team;
+      const interviewData1 =
+        interviewType.value === InterviewType.Group ? alloGroup1 : alloTeam1;
+
+      const alloGroup2 = app2.interview_allocations_group;
+      const alloTeam2 = app2.interview_allocations_team;
+      const interviewData2 =
+        interviewType.value === InterviewType.Group ? alloGroup2 : alloTeam2;
+
+      const isSet1 =
+        interviewData1 && interviewData1.uid && interviewData1.start;
+      const isSet2 =
+        interviewData2 && interviewData2.uid && interviewData2.start;
+
+      // 未指定的放前面
+      if (!isSet1 && !isSet2) return 0;
+      if (isSet1 && !isSet2) return 1;
+      if (!isSet1 && isSet2) return -1;
+
+      return (
+        new Date(interviewData1!.start).getTime() -
+        new Date(interviewData2!.start).getTime()
+      );
+    })
     .map((app, ind) => {
       const alloGroup = app.interview_allocations_group;
       const alloTeam = app.interview_allocations_team;
@@ -258,21 +284,6 @@ const data = computed(() =>
         ret.name = `💡${ret.name}`;
       }
       return ret;
-    })
-    // 将未分配的放在最前面
-    .sort((a, b) => {
-      const waitForDistribution = t('common.status.waitForDistribution');
-      if (
-        a.interviewTime === waitForDistribution &&
-        b.interviewTime !== waitForDistribution
-      )
-        return -1;
-      if (
-        a.interviewTime !== waitForDistribution &&
-        b.interviewTime === waitForDistribution
-      )
-        return -1;
-      return 0;
     }),
 );
 
