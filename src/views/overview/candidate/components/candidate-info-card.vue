@@ -1,7 +1,7 @@
 <template>
-  <div class="flex h-min">
+  <div class="flex h-min flex-row justify-center">
     <a-card
-      class="w-full h-min"
+      class="w-full h-min max-w-[600px]"
       :class="{ 'bg-[rgb(var(--primary-1))]': checked }"
       size="small"
       hoverable
@@ -30,6 +30,17 @@
             </a-tag>
             <a-tag v-if="info.abandoned" color="gray">
               {{ $t('common.status.abandoned') }}
+            </a-tag>
+            <a-tag
+              v-if="
+                curstep === 2 &&
+                info.answer &&
+                !info.abandoned &&
+                !info.rejected
+              "
+              color="green"
+            >
+              {{ '笔试✅' }}
             </a-tag>
           </div>
           <div class="flex items-center gap-2">
@@ -107,6 +118,10 @@ const props = defineProps({
   checked: {
     type: Boolean,
     default: false,
+  },
+  curstep: {
+    type: Number,
+    default: 1,
   },
 });
 

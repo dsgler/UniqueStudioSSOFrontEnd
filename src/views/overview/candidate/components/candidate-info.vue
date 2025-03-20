@@ -48,8 +48,11 @@
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
   <a-checkbox-group
     v-model="selectedApplications"
-    class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 overflow-y-auto pb-5 max-sm:shrink sm:grow"
-    style="scrollbar-width: thin"
+    class="grid gap-x-4 gap-y-3 overflow-y-auto pb-5 max-sm:shrink sm:grow"
+    style="
+      scrollbar-width: thin;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    "
     @change="handleChange"
   >
     <candidate-info-card
@@ -57,6 +60,7 @@
       :key="candidate.uid"
       :info="candidate"
       :checked="selectedApplications.includes(candidate.uid)"
+      :curstep="curStep"
     ></candidate-info-card>
   </a-checkbox-group>
   <div
