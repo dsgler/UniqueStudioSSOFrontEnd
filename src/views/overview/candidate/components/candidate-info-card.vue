@@ -44,7 +44,7 @@
             </a-tag>
           </div>
           <div class="flex items-center gap-2">
-            <a-tag v-if="info.is_quick" color="green">
+            <a-tag v-if="info.is_quick" color="blue">
               {{ $t('common.user.Quick') }}
             </a-tag>
             <a-tag v-if="info.is_project_c" color="purple">
