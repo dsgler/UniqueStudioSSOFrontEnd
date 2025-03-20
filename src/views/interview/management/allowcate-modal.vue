@@ -178,17 +178,21 @@ const selectedTime = computed(() => {
     ({ uid }) => uid === props.applicationId,
   );
   return (
-    nowApplication?.interview_selections?.map((interview) => ({
-      formatedTime: `${dayjs(interview.start).format('YYYY-MM-DD')} ${dayjs(
-        interview.start,
-      ).format('HH:mm')}-${dayjs(interview.end).format('HH:mm')}`,
-      date: dayjs(interview.start).format('YYYY-MM-DD'),
-      time: `${dayjs(interview.start).format('HH:mm')}
+    nowApplication?.interview_selections
+      ?.map((interview) => ({
+        formatedTime: `${dayjs(interview.start).format('YYYY-MM-DD')} ${dayjs(
+          interview.start,
+        ).format('HH:mm')}-${dayjs(interview.end).format('HH:mm')}`,
+        date: dayjs(interview.start).format('YYYY-MM-DD'),
+        time: `${dayjs(interview.start).format('HH:mm')}
         - ${dayjs(interview.end).format('HH:mm')}`,
-      period: interview.period,
-      start: interview.start,
-      end: interview.end,
-    })) ?? []
+        period: interview.period,
+        start: interview.start,
+        end: interview.end,
+      }))
+      .sort(
+        (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime(),
+      ) ?? []
   );
 });
 
