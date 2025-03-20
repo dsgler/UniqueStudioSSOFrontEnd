@@ -18,8 +18,16 @@
             v-for="(time, index) in selectedTime"
             :key="index"
             color="arcoblue"
+            @click="
+              () => {
+                form.selectInterviewId =
+                  optionsData[time.date]?.[time.period].find(
+                    (v) => v.time === time.time,
+                  )?.interviewId ?? '';
+              }
+            "
           >
-            {{ time }}
+            {{ time.formatedTime }}
           </a-tag>
         </a-space>
       </a-form-item>
@@ -79,8 +87,9 @@ const form = ref<{
 }>({ selectInterviewId: '' });
 const recStore = useRecruitmentStore();
 
-const timeOptions = computed(() => {
+const optionsData = computed(() => {
   // 面试分类 date->period->time
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const optionsData = {} as {
     [key: string]: { [key: string]: { time: string; interviewId: string }[] };
   };
@@ -112,10 +121,13 @@ const timeOptions = computed(() => {
       }
     }
   });
+  return optionsData;
+});
 
+const timeOptions = computed(() => {
   // 数据格式转换 change the data in optionsData to timeOptions
   const timeOptionsTmp: CascaderOption[] = [];
-  Object.entries(optionsData).forEach(([date, valueThisDate]) => {
+  Object.entries(optionsData.value).forEach(([date, valueThisDate]) => {
     const DateChildren = [] as CascaderOption[];
     Object.entries(valueThisDate).forEach(([period, valueThisPeriod]) => {
       const periodChildren = [] as CascaderOption[];
@@ -141,18 +153,20 @@ const timeOptions = computed(() => {
   return timeOptionsTmp;
 });
 
-
 const selectedTime = computed(() => {
   const nowApplication = recStore.curApplications.find(
     ({ uid }) => uid === props.applicationId,
   );
   return (
-    nowApplication?.interview_selections?.map(
-      (interview) =>
-        `${dayjs(interview.start).format('YYYY-MM-DD')} ${dayjs(
-          interview.start,
-        ).format('HH:mm')}-${dayjs(interview.end).format('HH:mm')}`,
-    ) ?? []
+    nowApplication?.interview_selections?.map((interview) => ({
+      formatedTime: `${dayjs(interview.start).format('YYYY-MM-DD')} ${dayjs(
+        interview.start,
+      ).format('HH:mm')}-${dayjs(interview.end).format('HH:mm')}`,
+      date: dayjs(interview.start).format('YYYY-MM-DD'),
+      time: `${dayjs(interview.start).format('HH:mm')}
+        - ${dayjs(interview.end).format('HH:mm')}`,
+      period: interview.period,
+    })) ?? []
   );
 });
 
