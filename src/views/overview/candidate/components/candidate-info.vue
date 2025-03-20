@@ -48,11 +48,8 @@
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
   <a-checkbox-group
     v-model="selectedApplications"
-    class="grid gap-x-4 gap-y-3 overflow-y-auto pb-5 max-sm:shrink sm:grow"
-    style="
-      scrollbar-width: thin;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    "
+    class="grid grid-cols-3 gap-x-4 gap-y-3 overflow-y-auto pb-5 max-sm:shrink sm:grow max-[1035px]:grid-cols-1 max-[1410px]:grid-cols-2"
+    style="scrollbar-width: thin"
     @change="handleChange"
   >
     <candidate-info-card

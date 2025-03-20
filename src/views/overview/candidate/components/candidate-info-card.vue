@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-min flex-row justify-center">
     <a-card
-      class="w-full h-min max-w-[600px]"
+      class="w-full h-min"
       :class="{ 'bg-[rgb(var(--primary-1))]': checked }"
       size="small"
       hoverable
