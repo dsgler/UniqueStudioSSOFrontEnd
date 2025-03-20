@@ -40,7 +40,7 @@
               "
               color="green"
             >
-              {{ '笔试✅' }}
+              {{ '笔试 ✅' }}
             </a-tag>
           </div>
           <div class="flex items-center gap-2">

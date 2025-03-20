@@ -63,7 +63,7 @@ import useWindowResize from '@/hooks/resize';
 import dayjs from 'dayjs';
 import { Group } from '@/constants/team';
 import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
-import { isOverlappingWithAny, timeRangesType } from './isOverlapping';
+import { isOverlappingWithAny, timeRangesType } from '@/utils/isOverlapping';
 
 const { t } = useI18n();
 const { widthType } = useWindowResize();

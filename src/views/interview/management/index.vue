@@ -183,9 +183,9 @@ import useRecruitmentStore from '@/store/modules/recruitment';
 import useWindowResize from '@/hooks/resize';
 import { useI18n } from 'vue-i18n';
 import dayjs from 'dayjs';
+import { sortAndMergeTimeRanges, timeRangesType } from '@/utils/isOverlapping';
 import AllowcateModal from './allowcate-modal.vue';
 import DateManagementModal from './date-management-modal.vue';
-import { sortAndMergeTimeRanges, timeRangesType } from './isOverlapping';
 
 const recStore = useRecruitmentStore();
 const { t } = useI18n();

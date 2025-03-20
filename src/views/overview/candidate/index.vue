@@ -25,7 +25,7 @@
         <a-steps
           :current="currentStep - 8"
           changeable
-          @change="(x) => (currentStep = x + 8)"
+          @change="(x: number) => (currentStep = x + 8)"
         >
           <a-step
             class="step-fail"
