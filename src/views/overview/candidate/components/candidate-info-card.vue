@@ -31,6 +31,17 @@
             <a-tag v-if="info.abandoned" color="gray">
               {{ $t('common.status.abandoned') }}
             </a-tag>
+            <a-tag
+              v-if="
+                curstep === 2 &&
+                info.answer &&
+                !info.abandoned &&
+                !info.rejected
+              "
+              color="green"
+            >
+              {{ '笔试✅' }}
+            </a-tag>
           </div>
           <div class="flex items-center gap-2">
             <a-tag v-if="info.is_quick" color="green">
@@ -107,6 +118,10 @@ const props = defineProps({
   checked: {
     type: Boolean,
     default: false,
+  },
+  curstep: {
+    type: Number,
+    default: 1,
   },
 });
 
