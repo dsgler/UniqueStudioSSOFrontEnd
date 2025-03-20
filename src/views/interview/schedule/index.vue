@@ -54,14 +54,6 @@ function Duration(start: Date, end: Date) {
   return `${timeRange}(${hours}h${minutes}min)`;
 }
 
-const props = defineProps({
-  curStep: {
-    type: Number,
-    default: 0,
-    required: true,
-  },
-});
-
 provide('formatToday', formatToday);
 const currentGroup = ref(Group.Web);
 const selectedDate = ref<string>('2024-01-01');
@@ -141,7 +133,7 @@ const candidates = computed(() => {
 
       return {
         name: app.user_detail?.name ?? '',
-        step: app.step ?? recruitSteps[props.curStep].value[0],
+        step: app.step ?? recruitSteps[0].value[0],
         group: app.group ?? '',
         interviewPeriod,
         startDate:
