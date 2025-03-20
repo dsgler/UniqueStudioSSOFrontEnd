@@ -167,6 +167,8 @@
     :application-id="allowcateApplicationId"
     :interview-type="interviewType === InterviewType.Team ? 'team' : 'group'"
     :current-group="currentGroup"
+    :filtered-apps="filteredAndSortedApps"
+    :merged-time-ranges="mergedTimeRanges"
   />
   <!-- 分配选手面试时间弹窗 -->
 </template>
@@ -183,6 +185,7 @@ import { useI18n } from 'vue-i18n';
 import dayjs from 'dayjs';
 import AllowcateModal from './allowcate-modal.vue';
 import DateManagementModal from './date-management-modal.vue';
+import { sortAndMergeTimeRanges, timeRangesType } from './isOverlapping';
 
 const recStore = useRecruitmentStore();
 const { t } = useI18n();
@@ -209,7 +212,8 @@ const tablePageSize = computed(() => {
   if (heightType.value === 'sm') return 6;
   return widthType.value === 'sm' ? 10 : widthType.value === 'lg' ? 8 : 10;
 });
-const data = computed(() =>
+
+const filteredAndSortedApps = computed(() =>
   recStore.curApplications
     .filter((app) => {
       // 根据选手阶段、组别、面试类型筛选选手
@@ -255,36 +259,55 @@ const data = computed(() =>
         new Date(interviewData1!.start).getTime() -
         new Date(interviewData2!.start).getTime()
       );
-    })
-    .map((app, ind) => {
-      const alloGroup = app.interview_allocations_group;
-      const alloTeam = app.interview_allocations_team;
-      const interviewData =
-        interviewType.value === InterviewType.Group ? alloGroup : alloTeam;
-
-      const ret = {
-        key: ind.toString(),
-        name: app.user_detail?.name ?? '',
-        interviewTime:
-          interviewData && interviewData.uid
-            ? `${dayjs(interviewData.start).format('YYYY-MM-DD')} ${dayjs(
-                interviewData.start,
-              ).format('HH:mm')}-${dayjs(interviewData.end).format('HH:mm')}`
-            : t('common.status.waitForDistribution'),
-        groupInterviewTime: alloGroup?.uid ? alloGroup.start : '',
-        teamInterviewTime: alloTeam?.uid ? alloTeam.start : '',
-        aid: app.uid,
-        step: app.step,
-      };
-      if (
-        ret.interviewTime === t('common.status.waitForDistribution') &&
-        app.interview_selections &&
-        app.interview_selections.length !== 0
-      ) {
-        ret.name = `💡${ret.name}`;
-      }
-      return ret;
     }),
+);
+
+const mergedTimeRanges = computed(() => {
+  const raw: timeRangesType[] = [];
+  filteredAndSortedApps.value.forEach((app) => {
+    const interview =
+      interviewType.value === InterviewType.Group
+        ? app.interview_allocations_group
+        : app.interview_allocations_team;
+    if (interview && interview.uid && interview.start && interview.end) {
+      raw.push([new Date(interview.start), new Date(interview.end)]);
+    }
+  });
+  const merged = sortAndMergeTimeRanges(raw);
+  return merged;
+});
+
+const data = computed(() =>
+  filteredAndSortedApps.value.map((app, ind) => {
+    const alloGroup = app.interview_allocations_group;
+    const alloTeam = app.interview_allocations_team;
+    const interviewData =
+      interviewType.value === InterviewType.Group ? alloGroup : alloTeam;
+
+    const ret = {
+      key: ind.toString(),
+      name: app.user_detail?.name ?? '',
+      interviewTime:
+        interviewData && interviewData.uid
+          ? `${dayjs(interviewData.start).format('YYYY-MM-DD')} ${dayjs(
+              interviewData.start,
+            ).format('HH:mm')}-${dayjs(interviewData.end).format('HH:mm')}`
+          : t('common.status.waitForDistribution'),
+      groupInterviewTime: alloGroup?.uid ? alloGroup.start : '',
+      teamInterviewTime: alloTeam?.uid ? alloTeam.start : '',
+      aid: app.uid,
+      step: app.step,
+    };
+    if (
+      ret.interviewTime === t('common.status.waitForDistribution') &&
+      app.interview_selections &&
+      app.interview_selections.length !== 0
+    ) {
+      ret.name = `💡${ret.name}`;
+    }
+
+    return ret;
+  }),
 );
 
 // 发送通知

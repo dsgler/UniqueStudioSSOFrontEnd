@@ -17,7 +17,15 @@
           <a-tag
             v-for="(time, index) in selectedTime"
             :key="index"
-            color="arcoblue"
+            :color="
+              isOverlappingWithAny(
+                new Date(time.start),
+                new Date(time.end),
+                mergedTimeRanges,
+              )
+                ? 'red'
+                : 'arcoblue'
+            "
             @click="
               () => {
                 form.selectInterviewId =
@@ -54,6 +62,8 @@ import useRecruitmentStore from '@/store/modules/recruitment';
 import useWindowResize from '@/hooks/resize';
 import dayjs from 'dayjs';
 import { Group } from '@/constants/team';
+import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
+import { isOverlappingWithAny, timeRangesType } from './isOverlapping';
 
 const { t } = useI18n();
 const { widthType } = useWindowResize();
@@ -74,6 +84,16 @@ const props = defineProps({
     default: Group.Web,
     required: true,
   },
+  filteredApps: {
+    type: Array as PropType<Application[]>,
+    default: () => [],
+    required: true,
+  },
+  mergedTimeRanges: {
+    type: Array as PropType<timeRangesType[]>,
+    default: () => [],
+    required: true,
+  },
 });
 
 const showAllowcate = defineModel<boolean>('showAllowcate', {
@@ -87,20 +107,20 @@ const form = ref<{
 }>({ selectInterviewId: '' });
 const recStore = useRecruitmentStore();
 
+const filteredInterviews = computed(() =>
+  props.interviewType === 'group'
+    ? recStore.curInterviews.filter((item) => item.name === props.currentGroup)
+    : recStore.curInterviews.filter((item) => item.name === 'unique'),
+);
+
 const optionsData = computed(() => {
   // 面试分类 date->period->time
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const optionsData = {} as {
     [key: string]: { [key: string]: { time: string; interviewId: string }[] };
   };
-  const filteredInterviews =
-    props.interviewType === 'group'
-      ? recStore.curInterviews.filter(
-          (item) => item.name === props.currentGroup,
-        )
-      : recStore.curInterviews.filter((item) => item.name === 'unique');
 
-  filteredInterviews.forEach((interview) => {
+  filteredInterviews.value.forEach((interview) => {
     if (interview.start && interview.period) {
       const date = dayjs(interview.start).format('YYYY-MM-DD');
       const time = `${dayjs(interview.start).format('HH:mm')}
@@ -166,6 +186,8 @@ const selectedTime = computed(() => {
       time: `${dayjs(interview.start).format('HH:mm')}
         - ${dayjs(interview.end).format('HH:mm')}`,
       period: interview.period,
+      start: interview.start,
+      end: interview.end,
     })) ?? []
   );
 });
