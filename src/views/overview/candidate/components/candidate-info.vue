@@ -47,10 +47,12 @@
   </div>
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
   <a-checkbox-group
+    ref="checkboxGroupRef"
     v-model="selectedApplications"
     class="grid grid-cols-4 gap-x-4 gap-y-3 overflow-y-auto pb-5 max-sm:shrink sm:grow max-[1035px]:grid-cols-1 max-[1410px]:grid-cols-2 max-[1775px]:grid-cols-3"
     style="scrollbar-width: thin"
     @change="handleChange"
+    @scroll="onCheckboxGroupScroll"
   >
     <candidate-info-card
       v-for="candidate in filteredApps"
@@ -135,7 +137,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, Ref } from 'vue';
+import { ref, computed, watch, Ref, onActivated } from 'vue';
+import { debounce } from 'lodash';
 import { Group, Step, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
@@ -144,6 +147,23 @@ import { useI18n } from 'vue-i18n';
 import useWindowResize from '@/hooks/resize';
 import candidateInfoCard from './candidate-info-card.vue';
 import editButtons from './edit-buttons.vue';
+
+// 因为进入缓存状态后的Scroll会重置，这里提前保存，在返回时自动滑动到之前的地方
+// 用onDeactivated不行，可能是因为在移除后执行的原因
+const checkboxGroupRef = ref<any>(null);
+const checkboxGroupScrollTop = ref<number>(0);
+onActivated(() => {
+  if (checkboxGroupRef.value) {
+    checkboxGroupRef.value.$el.scrollTo(0, checkboxGroupScrollTop.value);
+  }
+});
+const onCheckboxGroupScroll = debounce(
+  (e) => {
+    checkboxGroupScrollTop.value = e.target.scrollTop;
+  },
+  100,
+  { trailing: true },
+);
 
 const { widthType } = useWindowResize();
 const buttonSize = computed(() =>
