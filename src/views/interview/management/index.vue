@@ -1,151 +1,161 @@
 <template>
-  <div v-if="!showDateManagement" class="bg-[--color-bg-2] w-full h-full p-5">
-    <div class="text-[--color-text-1] text-xl pb-5 hidden sm:flex">{{
-      $t('menu.interview.management')
-    }}</div>
-    <div class="flex flex-col flex-1 w-full h-full sm:pb-6">
-      <div class="flex justify-between pb-5">
-        <a-select
-          v-model="displayType"
-          class="sm:hidden flex"
-          :bordered="false"
-        >
-          <a-option v-for="item in displayTypeItems" :key="item" :value="item">
-            {{ $t(item) }}
-          </a-option>
-        </a-select>
-        <!-- 移动端 选择显示类型 信息or操作 -->
+  <a-scrollbar
+    class="w-full h-full sm:pr-4 overflow-y-auto overflow-x-hidden"
+    outer-class="w-full h-full"
+  >
+    <div v-if="!showDateManagement" class="bg-[--color-bg-2] w-full p-5">
+      <div class="text-[--color-text-1] text-xl pb-5 hidden sm:flex">{{
+        $t('menu.interview.management')
+      }}</div>
 
-        <a-select
-          v-model="interviewType"
-          class="sm:hidden flex"
-          :bordered="false"
-        >
-          <a-option v-for="item in tabItems" :key="item" :value="item">
-            {{ $t(item) }}
-          </a-option>
-        </a-select>
-        <!-- 移动端 选择面试类别 -->
-
-        <a-radio-group v-model="interviewType" class="hidden sm:flex">
-          <a-radio v-for="item in tabItems" :key="item" :value="item">
-            <template #radio="{ checked }">
-              <a-tag
-                :checked="checked"
-                checkable
-                size="large"
-                :class="
-                  checked
-                    ? 'px-5 rounded-full text-[rgb(var(--primary-6))]'
-                    : 'px-5 rounded-full'
-                "
-                >{{ $t(item) }}</a-tag
-              >
-            </template>
-          </a-radio>
-        </a-radio-group>
-        <!-- PC端 选择面试类别 -->
-
-        <team-group-radio v-model="currentGroup"></team-group-radio>
-        <!-- 选择组 -->
-      </div>
-
-      <div class="flex justify-between pb-5">
-        <a-input-search
-          v-model="searchValue"
-          class="sm:w-80 w-1/2 mr-5"
-          :placeholder="$t('common.operation.searchByName')"
-        />
-        <!-- 搜索框 -->
-      </div>
-
-      <a-table
-        v-model:selectedKeys="selectedKeys"
-        row-key="aid"
-        :data="data"
-        :row-selection="{
-          type: 'checkbox',
-          showCheckedAll: true,
-          onlyCurrent: false,
-        }"
-        :pagination="{
-          pageSize: tablePageSize,
-        }"
-        column-resizable
-      >
-        <template #columns>
-          <a-table-column
-            key="common.user.name"
-            :title="$t('common.user.name')"
-            data-index="name"
-            :width="widthType === 'sm' ? 75 : undefined"
-          ></a-table-column>
-          <!-- 姓名 -->
-
-          <a-table-column
-            v-if="widthType != 'sm' || displayType === 'common.information'"
-            key="common.user.interviewTime"
-            :title="$t('common.user.interviewTime')"
-            data-index="interviewTime"
-            :sortable="{
-              sortDirections: ['ascend', 'descend'],
-            }"
-          ></a-table-column>
-          <!-- 面试时间 -->
-
-          <a-table-column
-            v-if="
-              widthType != 'sm' || displayType === 'common.operation.operate'
-            "
-            :title="$t('common.operation.operate')"
+      <div class="flex flex-col flex-1 w-full h-full">
+        <div class="flex justify-between pb-5">
+          <a-select
+            v-model="displayType"
+            class="sm:hidden flex"
+            :bordered="false"
           >
-            <template #cell="{ record }">
-              <!-- record are the data of the row -->
-              <a-button
-                class="px-2"
-                type="text"
-                @click="
-                  showAllowcate = true;
-                  allowcateApplicationId = record.aid;
-                "
-                >{{ $t('common.operation.allocate') }}</a-button
-              >
-              <a-button
-                class="px-2"
-                type="text"
-                @click="
-                  selectedKeys = [record.aid];
-                  showNotify = true;
-                "
-                >{{ $t('common.operation.notify') }}</a-button
-              >
-            </template>
-          </a-table-column>
-          <!-- 操作column -->
-        </template>
-      </a-table>
-      <div class="flex justify-between sm:pb-5 mt-auto">
-        <a-button
-          type="outline"
-          class="sm:w-auto"
-          @click="showDateManagement = true"
+            <a-option
+              v-for="item in displayTypeItems"
+              :key="item"
+              :value="item"
+            >
+              {{ $t(item) }}
+            </a-option>
+          </a-select>
+          <!-- 移动端 选择显示类型 信息or操作 -->
+
+          <a-select
+            v-model="interviewType"
+            class="sm:hidden flex"
+            :bordered="false"
+          >
+            <a-option v-for="item in tabItems" :key="item" :value="item">
+              {{ $t(item) }}
+            </a-option>
+          </a-select>
+          <!-- 移动端 选择面试类别 -->
+
+          <a-radio-group v-model="interviewType" class="hidden sm:flex">
+            <a-radio v-for="item in tabItems" :key="item" :value="item">
+              <template #radio="{ checked }">
+                <a-tag
+                  :checked="checked"
+                  checkable
+                  size="large"
+                  :class="
+                    checked
+                      ? 'px-5 rounded-full text-[rgb(var(--primary-6))]'
+                      : 'px-5 rounded-full'
+                  "
+                  >{{ $t(item) }}</a-tag
+                >
+              </template>
+            </a-radio>
+          </a-radio-group>
+          <!-- PC端 选择面试类别 -->
+
+          <team-group-radio v-model="currentGroup"></team-group-radio>
+          <!-- 选择组 -->
+        </div>
+
+        <div class="flex justify-between pb-5">
+          <a-input-search
+            v-model="searchValue"
+            class="sm:w-80 w-1/2 mr-5"
+            :placeholder="$t('common.operation.searchByName')"
+          />
+          <!-- 搜索框 -->
+        </div>
+
+        <a-table
+          v-model:selectedKeys="selectedKeys"
+          row-key="aid"
+          :data="data"
+          :row-selection="{
+            type: 'checkbox',
+            showCheckedAll: true,
+            onlyCurrent: false,
+          }"
+          :pagination="{
+            hideOnSinglePage: true,
+          }"
+          column-resizable
         >
-          {{ $t('common.operation.dateManagement') }}
-        </a-button>
-        <!-- 日程管理 -->
-        <a-button
-          type="outline"
-          class="sm:w-auto"
-          :disabled="!selectData.length"
-          @click="showNotify = true"
-        >
-          <template #icon> <icon-plus /> </template>
-          {{ $t('common.operation.sendNotification') }}
-        </a-button>
-        <!-- 发送通知 -->
+          <template #columns>
+            <a-table-column
+              key="common.user.name"
+              :title="$t('common.user.name')"
+              data-index="name"
+              :width="widthType === 'sm' ? 75 : undefined"
+            ></a-table-column>
+            <!-- 姓名 -->
+
+            <a-table-column
+              v-if="widthType != 'sm' || displayType === 'common.information'"
+              key="common.user.interviewTime"
+              :title="$t('common.user.interviewTime')"
+              data-index="interviewTime"
+              :sortable="{
+                sortDirections: ['ascend', 'descend'],
+              }"
+            ></a-table-column>
+            <!-- 面试时间 -->
+
+            <a-table-column
+              v-if="
+                widthType != 'sm' || displayType === 'common.operation.operate'
+              "
+              :title="$t('common.operation.operate')"
+            >
+              <template #cell="{ record }">
+                <!-- record are the data of the row -->
+                <a-button
+                  class="px-2"
+                  type="text"
+                  @click="
+                    showAllowcate = true;
+                    allowcateApplicationId = record.aid;
+                  "
+                  >{{ $t('common.operation.allocate') }}</a-button
+                >
+                <a-button
+                  class="px-2"
+                  type="text"
+                  @click="
+                    selectedKeys = [record.aid];
+                    showNotify = true;
+                  "
+                  >{{ $t('common.operation.notify') }}</a-button
+                >
+              </template>
+            </a-table-column>
+            <!-- 操作column -->
+          </template>
+        </a-table>
+        <div class="flex justify-between sm:pb-5 pt-5 mt-auto">
+          <a-button
+            type="outline"
+            class="sm:w-auto"
+            @click="showDateManagement = true"
+          >
+            {{ $t('common.operation.dateManagement') }}
+          </a-button>
+          <!-- 日程管理 -->
+          <a-button
+            type="outline"
+            class="sm:w-auto"
+            :disabled="!selectData.length"
+            @click="showNotify = true"
+          >
+            <template #icon> <icon-plus /> </template>
+            {{ $t('common.operation.sendNotification') }}
+          </a-button>
+          <!-- 发送通知 -->
+        </div>
       </div>
     </div>
-  </div>
+  </a-scrollbar>
 
   <date-management-modal
     v-model:show="showDateManagement"
@@ -189,7 +199,7 @@ import DateManagementModal from './date-management-modal.vue';
 
 const recStore = useRecruitmentStore();
 const { t } = useI18n();
-const { widthType, heightType } = useWindowResize();
+const { widthType } = useWindowResize();
 
 const interviewType = ref(InterviewType.Group);
 const currentGroup = ref(Group.Web);
@@ -207,11 +217,6 @@ const showDateManagement = ref(false);
 
 const tabItems = [InterviewType.Group, InterviewType.Team];
 const displayTypeItems = ['common.information', 'common.operation.operate'];
-
-const tablePageSize = computed(() => {
-  if (heightType.value === 'sm') return 6;
-  return widthType.value === 'sm' ? 10 : widthType.value === 'lg' ? 8 : 10;
-});
 
 const filteredAndSortedApps = computed(() =>
   recStore.curApplications
