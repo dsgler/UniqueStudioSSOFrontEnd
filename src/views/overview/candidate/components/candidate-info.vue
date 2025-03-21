@@ -179,6 +179,16 @@ const currentGroup = defineModel<Group>('currentGroup', {
   required: true,
 });
 
+watch(curStep, () => {
+  if (checkboxGroupRef.value) {
+    checkboxGroupRef.value.$el.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+  }
+});
+
 const recStore = useRecruitmentStore();
 
 const groups = Object.values(Group).filter((x) => x !== Group.Unique);
@@ -202,19 +212,40 @@ const filteredApps = computed(() => {
         ({ group, abandoned, rejected }) =>
           group === currentGroup.value && (abandoned || rejected),
       )
-      .sort((a, b) => StepsOrder[a.step] - StepsOrder[b.step]);
+      .sort((a, b) => {
+        const StepCmp = StepsOrder[a.step] - StepsOrder[b.step];
+        if (StepCmp !== 0) {
+          return StepCmp;
+        }
+        return (
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+      });
   }
   if (curStep.value === 10) {
     // 全部
     return recStore.curApplications
       .filter(({ group }) => group === currentGroup.value)
-      .sort((a, b) => StepsOrder[a.step] - StepsOrder[b.step]);
+      .sort((a, b) => {
+        const StepCmp = StepsOrder[a.step] - StepsOrder[b.step];
+        if (StepCmp !== 0) {
+          return StepCmp;
+        }
+        return (
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+      });
   }
-  return recStore.curApplications.filter(
-    ({ step, group }) =>
-      recruitSteps[curStep.value - 1].value.includes(step) &&
-      group === currentGroup.value,
-  );
+  return recStore.curApplications
+    .filter(
+      ({ step, group }) =>
+        recruitSteps[curStep.value - 1].value.includes(step) &&
+        group === currentGroup.value,
+    )
+    .sort(
+      (a, b) =>
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+    );
 });
 const selectedApplications = ref<string[]>([]);
 
