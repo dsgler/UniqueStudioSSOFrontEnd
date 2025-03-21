@@ -48,7 +48,7 @@
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
   <a-checkbox-group
     v-model="selectedApplications"
-    class="grid grid-cols-3 gap-x-4 gap-y-3 overflow-y-auto pb-5 max-sm:shrink sm:grow max-[1035px]:grid-cols-1 max-[1410px]:grid-cols-2"
+    class="grid grid-cols-4 gap-x-4 gap-y-3 overflow-y-auto pb-5 max-sm:shrink sm:grow max-[1035px]:grid-cols-1 max-[1410px]:grid-cols-2 max-[1775px]:grid-cols-3"
     style="scrollbar-width: thin"
     @change="handleChange"
   >

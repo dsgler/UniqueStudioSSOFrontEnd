@@ -8,12 +8,15 @@
       :header-style="{ height: 'auto' }"
     >
       <template #title>
-        <div class="flex justify-between w-full">
+        <div class="flex w-full">
           <div
             style="scrollbar-width: none"
-            class="flex justify-start gap-2 items-center overflow-y-auto"
+            class="flex justify-start gap-2 items-center overflow-y-auto grow overscroll-x-auto mr-[10px]"
           >
-            <a-link @click="$router.push(`candidate-detail/${info.uid}`)">
+            <a-link
+              class="shrink-0"
+              @click="$router.push(`candidate-detail/${info.uid}`)"
+            >
               <a-avatar class="bg-[rgb(var(--primary-6))] mr-2" :size="24">
                 <img
                   v-if="info.user_detail?.avatar_url"
@@ -25,10 +28,10 @@
                 {{ info.user_detail?.name || '' }}
               </a-typography-text>
             </a-link>
-            <a-tag v-if="info.rejected" color="red">
+            <a-tag v-if="info.rejected" color="red" class="shrink-0">
               {{ $t('common.status.rejected') }}
             </a-tag>
-            <a-tag v-if="info.abandoned" color="gray">
+            <a-tag v-if="info.abandoned" color="gray" class="shrink-0">
               {{ $t('common.status.abandoned') }}
             </a-tag>
             <a-tag
@@ -39,11 +42,12 @@
                 !info.rejected
               "
               color="green"
+              class="shrink-0"
             >
               {{ '笔试 ✅' }}
             </a-tag>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 shrink-0">
             <a-tag v-if="info.is_quick" color="blue">
               {{ $t('common.user.Quick') }}
             </a-tag>
