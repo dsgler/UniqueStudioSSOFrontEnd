@@ -67,6 +67,26 @@
           />
           <!-- 搜索框 -->
         </div>
+        <div class="flex justify-between sm:pb-5 pt-5 mt-auto">
+          <a-button
+            type="outline"
+            class="sm:w-auto"
+            @click="showDateManagement = true"
+          >
+            {{ $t('common.operation.dateManagement') }}
+          </a-button>
+          <!-- 日程管理 -->
+          <a-button
+            type="outline"
+            class="sm:w-auto"
+            :disabled="!selectData.length"
+            @click="showNotify = true"
+          >
+            <template #icon> <icon-plus /> </template>
+            {{ $t('common.operation.sendNotification') }}
+          </a-button>
+          <!-- 发送通知 -->
+        </div>
 
         <a-table
           v-model:selectedKeys="selectedKeys"
@@ -77,9 +97,7 @@
             showCheckedAll: true,
             onlyCurrent: false,
           }"
-          :pagination="{
-            hideOnSinglePage: true,
-          }"
+          :pagination="false"
           column-resizable
         >
           <template #columns>
@@ -133,26 +151,6 @@
             <!-- 操作column -->
           </template>
         </a-table>
-        <div class="flex justify-between sm:pb-5 pt-5 mt-auto">
-          <a-button
-            type="outline"
-            class="sm:w-auto"
-            @click="showDateManagement = true"
-          >
-            {{ $t('common.operation.dateManagement') }}
-          </a-button>
-          <!-- 日程管理 -->
-          <a-button
-            type="outline"
-            class="sm:w-auto"
-            :disabled="!selectData.length"
-            @click="showNotify = true"
-          >
-            <template #icon> <icon-plus /> </template>
-            {{ $t('common.operation.sendNotification') }}
-          </a-button>
-          <!-- 发送通知 -->
-        </div>
       </div>
     </div>
   </a-scrollbar>
