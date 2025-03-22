@@ -157,4 +157,12 @@ const remainingSchedules = (year: number, month: number, date: number) => {
     }
   }
 }
+
+@media (max-width: 1024px) {
+  .month-min {
+    :deep(.arco-calendar-header-right) {
+      display: none;
+    }
+  }
+}
 </style>
