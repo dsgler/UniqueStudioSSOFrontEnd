@@ -68,7 +68,7 @@
           />
           <!-- 搜索框 -->
         </div>
-        <div class="flex justify-between sm:pb-5 pt-5 mt-auto">
+        <div class="flex justify-between pb-5 pt-5 sm:mt-auto">
           <a-button
             type="outline"
             class="sm:w-auto"

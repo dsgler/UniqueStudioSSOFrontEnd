@@ -18,7 +18,7 @@
       </div>
     </div>
     <a-scrollbar
-      class="w-full h-full sm:pr-4 overflow-y-auto overflow-x-hidden"
+      class="w-full h-full pb-[100px] sm:pr-4 overflow-y-auto overflow-x-hidden"
       outer-class="w-full h-full"
     >
       <div
