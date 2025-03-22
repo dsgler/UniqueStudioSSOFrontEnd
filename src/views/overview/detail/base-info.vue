@@ -46,7 +46,7 @@
         </div>
         <div
           ref="introDivRef"
-          class="text-[--color-neutral-8] whitespace-pre-line"
+          class="text-[--color-neutral-8] whitespace-pre-line text-[16px] leading-[1.5]"
           :class="{ 'line-clamp-3': !showIntroDetail }"
         >
           {{ applyStore.data!.intro }}
@@ -123,7 +123,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { GenderMap } from '@/constants/team';
 import useApplicationStore from '@/store/modules/application';
 import useWindowResize from '@/hooks/resize';
@@ -134,11 +134,13 @@ const user = computed(() => applyStore.data?.user_detail);
 const showIntroDetail = ref(false);
 
 const introDivRef = ref<HTMLElement | null>(null);
-const isTextOverflow = ref(false);
-watchEffect(() => {
+const isTextOverflow = ref(true);
+onMounted(() => {
   if (introDivRef.value) {
     isTextOverflow.value =
-      introDivRef.value.scrollHeight > introDivRef.value.clientHeight;
+      Math.abs(
+        introDivRef.value.scrollHeight - introDivRef.value.clientHeight,
+      ) > 1;
   }
 });
 
