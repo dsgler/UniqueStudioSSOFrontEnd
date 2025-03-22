@@ -16,8 +16,11 @@ const router = createRouter({
     NO_PERMISSION,
     // DETAIL,
   ],
-  scrollBehavior() {
-    return { top: 0 };
+  scrollBehavior(_to, _from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    }
+    return { top: 0, left: 0 };
   },
 });
 
