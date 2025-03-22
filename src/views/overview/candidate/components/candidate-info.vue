@@ -302,7 +302,7 @@ const handleChangeAll = (value: boolean) => {
     : [];
 };
 
-const handleChange = (values: string[]) => {
+const handleChange = (values: any[]) => {
   if (values.length === 0) {
     checkedAll.value = false;
     indeterminate.value = false;
