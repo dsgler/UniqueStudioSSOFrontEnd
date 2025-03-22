@@ -1,9 +1,10 @@
 <template>
   <a-scrollbar
+    v-if="!showDateManagement"
     class="w-full h-full sm:pr-4 overflow-y-auto overflow-x-hidden"
     outer-class="w-full h-full"
   >
-    <div v-if="!showDateManagement" class="bg-[--color-bg-2] w-full p-5">
+    <div class="bg-[--color-bg-2] w-full p-5">
       <div class="text-[--color-text-1] text-xl pb-5 hidden sm:flex">{{
         $t('menu.interview.management')
       }}</div>
@@ -165,8 +166,8 @@
   </a-scrollbar>
 
   <date-management-modal
+    v-if="showDateManagement"
     v-model:show="showDateManagement"
-    :class="showDateManagement ? '' : 'hidden'"
   />
 
   <notification-modal
