@@ -109,11 +109,13 @@
               :width="widthType === 'sm' ? 75 : undefined"
             >
               <template #cell="{ record }">
-                <a-button
+                <a-link
                   @click="
                     $router.push(`/overview/candidate-detail/${record.aid}`)
                   "
-                  >{{ record.name }}</a-button
+                  ><a-typography-text>{{
+                    record.name
+                  }}</a-typography-text></a-link
                 >
               </template>
             </a-table-column>
