@@ -138,6 +138,7 @@ const candidates = computed(() => {
         interviewPeriod,
         startDate:
           app.step === 'GroupInterview' ? groupStartDate : teamStartDate,
+        uid: app.uid,
       };
     })
     .sort((a, b) => dayjs(a.startDate).unix() - dayjs(b.startDate).unix());
