@@ -46,24 +46,32 @@
     <team-group-radio v-model="currentGroup"></team-group-radio>
   </div>
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
-  <a-checkbox-group
-    ref="checkboxGroupRef"
-    v-model="selectedApplications"
-    class="grid grid-cols-4 gap-x-4 gap-y-3 overflow-y-auto pb-5 max-sm:shrink sm:grow max-[1035px]:grid-cols-1 max-[1410px]:grid-cols-2 max-[1775px]:grid-cols-3"
-    style="scrollbar-width: thin"
-    @change="handleChange"
-    @scroll="onCheckboxGroupScroll"
+  <a-scrollbar
+    class="w-full flex-1 overflow-y-auto pr-0 sm:pr-[15px]"
+    outer-class="w-full flex-1 flex flex-col overflow-y-hidden max-sm:pb-[40px]"
   >
-    <candidate-info-card
-      v-for="candidate in filteredApps"
-      :key="candidate.uid"
-      :info="candidate"
-      :checked="selectedApplications.includes(candidate.uid)"
-      :curstep="curStep"
-    ></candidate-info-card>
-  </a-checkbox-group>
+    <a-checkbox-group
+      ref="checkboxGroupRef"
+      v-model="selectedApplications"
+      class="grid grid-cols-4 gap-x-4 gap-y-3 max-sm:shrink sm:grow max-[1035px]:grid-cols-1 max-[1410px]:grid-cols-2 max-[1775px]:grid-cols-3"
+      @change="handleChange"
+      @scroll="onCheckboxGroupScroll"
+    >
+      <candidate-info-card
+        v-for="candidate in filteredApps"
+        :key="candidate.uid"
+        :info="candidate"
+        :checked="selectedApplications.includes(candidate.uid)"
+        :curstep="curStep"
+      ></candidate-info-card> </a-checkbox-group
+  ></a-scrollbar>
+  <!-- <div style="flex: 1; background-color: green; overflow-y: scroll">
+    <div style="height: 900px; width: 100%; background-color: azure"></div>
+    <p>123</p>
+  </div> -->
+
   <div
-    class="flex justify-between flex-row-reverse justify-self-end max-sm:fixed bottom-0 left-0 w-full bg-[--color-bg-1] p-2"
+    class="flex justify-between justify-self-end flex-row-reverse max-sm:fixed bottom-0 left-0 w-full bg-[--color-bg-1] p-2"
   >
     <!-- curStep从1开始算，传入edi-button时进行-1操作 -->
     <edit-buttons
