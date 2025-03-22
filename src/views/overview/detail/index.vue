@@ -15,7 +15,7 @@
               style="color: var(--color-text-3)"
               class="self-start p-0 cursor-pointer"
               size="large"
-              @click="$router.push('/overview/candidate')"
+              @click="$router.back()"
             >
               <template #icon> <icon-left /> </template>
               {{ $t('common.operation.back') }}

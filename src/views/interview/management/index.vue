@@ -106,7 +106,16 @@
               :title="$t('common.user.name')"
               data-index="name"
               :width="widthType === 'sm' ? 75 : undefined"
-            ></a-table-column>
+            >
+              <template #cell="{ record }">
+                <a-button
+                  @click="
+                    $router.push(`/overview/candidate-detail/${record.aid}`)
+                  "
+                  >{{ record.name }}</a-button
+                >
+              </template>
+            </a-table-column>
             <!-- 姓名 -->
 
             <a-table-column
