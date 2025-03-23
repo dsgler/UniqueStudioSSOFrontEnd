@@ -54,9 +54,11 @@
             <icon-user
               class="w-9 h-9 text-xl p-2 float-left mr-2.5 text-gray-500"
             />
-            <span class="float-left leading-10 text-[--color-text-3]">{{
-              info.name
-            }}</span>
+            <a-link
+              class="float-left leading-10 text-[--color-text-3]"
+              @click="$router.push(`/overview/candidate-detail/${info.uid}`)"
+              >{{ info.name }}</a-link
+            >
           </div>
         </li>
       </div>
@@ -85,6 +87,7 @@ interface CandidateInfo {
   step: string;
   group: string;
   interviewPeriod: string;
+  uid: string;
 }
 
 const props = defineProps<{

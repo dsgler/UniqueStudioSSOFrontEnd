@@ -17,7 +17,10 @@
         ></team-group-radio>
       </div>
     </div>
-    <div class="arco-scrollbar-container overflow-auto h-full">
+    <a-scrollbar
+      class="w-full h-full pb-[100px] sm:pr-4 overflow-y-auto overflow-x-hidden"
+      outer-class="w-full h-full"
+    >
       <div
         class="grid grid-cols-1 lg:grid-cols-3 gap-4 place-content-around mt-4 grid-container"
       >
@@ -71,7 +74,7 @@
           <!-- 删除 -->
         </div>
       </div>
-    </div>
+    </a-scrollbar>
 
     <a-button
       type="outline"

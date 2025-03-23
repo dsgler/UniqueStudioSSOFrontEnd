@@ -45,8 +45,9 @@
           {{ $t('common.user.intro') }}
         </div>
         <div
-          class="text-[--color-neutral-8] whitespace-pre-line"
-          :class="{ 'line-clamp-3': !showIntroDetail && isTextOverflow }"
+          ref="introDivRef"
+          class="text-[--color-neutral-8] whitespace-pre-line text-[16px] leading-[1.5]"
+          :class="{ 'line-clamp-3': !showIntroDetail }"
         >
           {{ applyStore.data!.intro }}
         </div>
@@ -122,7 +123,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { GenderMap } from '@/constants/team';
 import useApplicationStore from '@/store/modules/application';
 import useWindowResize from '@/hooks/resize';
@@ -132,12 +133,15 @@ const applyStore = useApplicationStore();
 const user = computed(() => applyStore.data?.user_detail);
 const showIntroDetail = ref(false);
 
-// 文本超过多少字符时显示"查看更多"按钮
-const TEXT_LIMIT = 100;
-
-const isTextOverflow = computed(() => {
-  const introText = applyStore.data?.intro || '';
-  return introText.length > TEXT_LIMIT;
+const introDivRef = ref<HTMLElement | null>(null);
+const isTextOverflow = ref(true);
+onMounted(() => {
+  if (introDivRef.value) {
+    isTextOverflow.value =
+      Math.abs(
+        introDivRef.value.scrollHeight - introDivRef.value.clientHeight,
+      ) > 1;
+  }
 });
 
 const { widthType } = useWindowResize();

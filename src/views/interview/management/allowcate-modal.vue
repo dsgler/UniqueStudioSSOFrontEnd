@@ -17,9 +17,25 @@
           <a-tag
             v-for="(time, index) in selectedTime"
             :key="index"
-            color="arcoblue"
+            :color="
+              isOverlappingWithAny(
+                new Date(time.start),
+                new Date(time.end),
+                mergedTimeRanges,
+              )
+                ? 'red'
+                : 'arcoblue'
+            "
+            @click="
+              () => {
+                form.selectInterviewId =
+                  optionsData[time.date]?.[time.period].find(
+                    (v) => v.time === time.time,
+                  )?.interviewId ?? '';
+              }
+            "
           >
-            {{ time }}
+            {{ time.formatedTime }}
           </a-tag>
         </a-space>
       </a-form-item>
@@ -46,6 +62,8 @@ import useRecruitmentStore from '@/store/modules/recruitment';
 import useWindowResize from '@/hooks/resize';
 import dayjs from 'dayjs';
 import { Group } from '@/constants/team';
+import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
+import { isOverlappingWithAny, timeRangesType } from '@/utils/isOverlapping';
 
 const { t } = useI18n();
 const { widthType } = useWindowResize();
@@ -66,6 +84,16 @@ const props = defineProps({
     default: Group.Web,
     required: true,
   },
+  filteredApps: {
+    type: Array as PropType<Application[]>,
+    default: () => [],
+    required: true,
+  },
+  mergedTimeRanges: {
+    type: Array as PropType<timeRangesType[]>,
+    default: () => [],
+    required: true,
+  },
 });
 
 const showAllowcate = defineModel<boolean>('showAllowcate', {
@@ -79,19 +107,20 @@ const form = ref<{
 }>({ selectInterviewId: '' });
 const recStore = useRecruitmentStore();
 
-const timeOptions = computed(() => {
+const filteredInterviews = computed(() =>
+  props.interviewType === 'group'
+    ? recStore.curInterviews.filter((item) => item.name === props.currentGroup)
+    : recStore.curInterviews.filter((item) => item.name === 'unique'),
+);
+
+const optionsData = computed(() => {
   // 面试分类 date->period->time
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const optionsData = {} as {
     [key: string]: { [key: string]: { time: string; interviewId: string }[] };
   };
-  const filteredInterviews =
-    props.interviewType === 'group'
-      ? recStore.curInterviews.filter(
-          (item) => item.name === props.currentGroup,
-        )
-      : recStore.curInterviews.filter((item) => item.name === 'unique');
 
-  filteredInterviews.forEach((interview) => {
+  filteredInterviews.value.forEach((interview) => {
     if (interview.start && interview.period) {
       const date = dayjs(interview.start).format('YYYY-MM-DD');
       const time = `${dayjs(interview.start).format('HH:mm')}
@@ -112,10 +141,13 @@ const timeOptions = computed(() => {
       }
     }
   });
+  return optionsData;
+});
 
+const timeOptions = computed(() => {
   // 数据格式转换 change the data in optionsData to timeOptions
   const timeOptionsTmp: CascaderOption[] = [];
-  Object.entries(optionsData).forEach(([date, valueThisDate]) => {
+  Object.entries(optionsData.value).forEach(([date, valueThisDate]) => {
     const DateChildren = [] as CascaderOption[];
     Object.entries(valueThisDate).forEach(([period, valueThisPeriod]) => {
       const periodChildren = [] as CascaderOption[];
@@ -141,18 +173,26 @@ const timeOptions = computed(() => {
   return timeOptionsTmp;
 });
 
-
 const selectedTime = computed(() => {
   const nowApplication = recStore.curApplications.find(
     ({ uid }) => uid === props.applicationId,
   );
   return (
-    nowApplication?.interview_selections?.map(
-      (interview) =>
-        `${dayjs(interview.start).format('YYYY-MM-DD')} ${dayjs(
+    nowApplication?.interview_selections
+      ?.map((interview) => ({
+        formatedTime: `${dayjs(interview.start).format('YYYY-MM-DD')} ${dayjs(
           interview.start,
         ).format('HH:mm')}-${dayjs(interview.end).format('HH:mm')}`,
-    ) ?? []
+        date: dayjs(interview.start).format('YYYY-MM-DD'),
+        time: `${dayjs(interview.start).format('HH:mm')}
+        - ${dayjs(interview.end).format('HH:mm')}`,
+        period: interview.period,
+        start: interview.start,
+        end: interview.end,
+      }))
+      .sort(
+        (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime(),
+      ) ?? []
   );
 });
 

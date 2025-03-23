@@ -46,25 +46,27 @@
     <team-group-radio v-model="currentGroup"></team-group-radio>
   </div>
   <!-- @vue-ignore 由于逆变@change会报ts错误 -->
-  <a-checkbox-group
-    v-model="selectedApplications"
-    class="grid gap-x-4 gap-y-3 overflow-y-auto pb-5 max-sm:shrink sm:grow"
-    style="
-      scrollbar-width: thin;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    "
-    @change="handleChange"
+  <a-scrollbar
+    ref="scrollbarRef"
+    class="w-full flex-1 overflow-y-auto pr-0 sm:pr-[15px]"
+    outer-class="w-full flex-1 flex flex-col overflow-y-hidden max-sm:pb-[40px]"
   >
-    <candidate-info-card
-      v-for="candidate in filteredApps"
-      :key="candidate.uid"
-      :info="candidate"
-      :checked="selectedApplications.includes(candidate.uid)"
-      :curstep="curStep"
-    ></candidate-info-card>
-  </a-checkbox-group>
+    <a-checkbox-group
+      v-model="selectedApplications"
+      class="grid grid-cols-4 gap-x-4 gap-y-3 max-sm:shrink sm:grow max-[1035px]:grid-cols-1 max-[1410px]:grid-cols-2 max-[1775px]:grid-cols-3"
+      @change="handleChange"
+    >
+      <candidate-info-card
+        v-for="candidate in filteredApps"
+        :key="candidate.uid"
+        :info="candidate"
+        :checked="selectedApplications.includes(candidate.uid)"
+        :curstep="curStep"
+      ></candidate-info-card> </a-checkbox-group
+  ></a-scrollbar>
+
   <div
-    class="flex justify-between flex-row-reverse justify-self-end max-sm:fixed bottom-0 left-0 w-full bg-[--color-bg-1] p-2"
+    class="flex justify-between justify-self-end flex-row-reverse max-sm:fixed bottom-0 left-0 w-full bg-[--color-bg-1] p-2"
   >
     <!-- curStep从1开始算，传入edi-button时进行-1操作 -->
     <edit-buttons
@@ -138,7 +140,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, Ref } from 'vue';
+import {
+  ref,
+  computed,
+  watch,
+  Ref,
+  onActivated,
+  onMounted,
+  onBeforeUnmount,
+} from 'vue';
+import { debounce } from 'lodash';
 import { Group, Step, recruitSteps } from '@/constants/team';
 import useRecruitmentStore from '@/store/modules/recruitment';
 import TeamGroupRadio from '@/views/components/team-group-radio.vue';
@@ -147,6 +158,39 @@ import { useI18n } from 'vue-i18n';
 import useWindowResize from '@/hooks/resize';
 import candidateInfoCard from './candidate-info-card.vue';
 import editButtons from './edit-buttons.vue';
+
+// 因为进入缓存状态后的Scroll会重置，这里提前保存，在返回时自动滑动到之前的地方
+// 用onDeactivated不行，可能是因为在移除后执行的原因
+const scrollbarRef = ref<any>(null);
+// 无法ref这个元素，只能使用丑陋的方法
+const checkboxGroupRef = computed<HTMLElement | undefined>(
+  () => scrollbarRef.value?.$el.children?.[0],
+);
+const checkboxGroupScrollTop = ref<number>(0);
+onActivated(() => {
+  if (checkboxGroupRef.value) {
+    checkboxGroupRef.value.scrollTo(0, checkboxGroupScrollTop.value);
+  }
+});
+const onCheckboxGroupScroll = debounce(
+  (e) => {
+    checkboxGroupScrollTop.value = e.target.scrollTop;
+  },
+  100,
+  { trailing: true },
+);
+
+onMounted(() => {
+  if (checkboxGroupRef.value) {
+    checkboxGroupRef.value.addEventListener('scroll', onCheckboxGroupScroll);
+  }
+});
+
+onBeforeUnmount(() => {
+  if (checkboxGroupRef.value) {
+    checkboxGroupRef.value.removeEventListener('scroll', onCheckboxGroupScroll);
+  }
+});
 
 const { widthType } = useWindowResize();
 const buttonSize = computed(() =>
@@ -160,6 +204,16 @@ const curStep = defineModel<number>('curStep', {
 });
 const currentGroup = defineModel<Group>('currentGroup', {
   required: true,
+});
+
+watch(curStep, () => {
+  if (checkboxGroupRef.value) {
+    checkboxGroupRef.value.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+  }
 });
 
 const recStore = useRecruitmentStore();
@@ -185,19 +239,40 @@ const filteredApps = computed(() => {
         ({ group, abandoned, rejected }) =>
           group === currentGroup.value && (abandoned || rejected),
       )
-      .sort((a, b) => StepsOrder[a.step] - StepsOrder[b.step]);
+      .sort((a, b) => {
+        const StepCmp = StepsOrder[a.step] - StepsOrder[b.step];
+        if (StepCmp !== 0) {
+          return StepCmp;
+        }
+        return (
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+      });
   }
   if (curStep.value === 10) {
     // 全部
     return recStore.curApplications
       .filter(({ group }) => group === currentGroup.value)
-      .sort((a, b) => StepsOrder[a.step] - StepsOrder[b.step]);
+      .sort((a, b) => {
+        const StepCmp = StepsOrder[a.step] - StepsOrder[b.step];
+        if (StepCmp !== 0) {
+          return StepCmp;
+        }
+        return (
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+      });
   }
-  return recStore.curApplications.filter(
-    ({ step, group }) =>
-      recruitSteps[curStep.value - 1].value.includes(step) &&
-      group === currentGroup.value,
-  );
+  return recStore.curApplications
+    .filter(
+      ({ step, group }) =>
+        recruitSteps[curStep.value - 1].value.includes(step) &&
+        group === currentGroup.value,
+    )
+    .sort(
+      (a, b) =>
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+    );
 });
 const selectedApplications = ref<string[]>([]);
 
@@ -227,7 +302,7 @@ const handleChangeAll = (value: boolean) => {
     : [];
 };
 
-const handleChange = (values: string[]) => {
+const handleChange = (values: any[]) => {
   if (values.length === 0) {
     checkedAll.value = false;
     indeterminate.value = false;

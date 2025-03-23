@@ -121,27 +121,49 @@ const recStore = useRecruitmentStore();
 
 const schedules = computed<Schedule[]>(() => {
   const schedule: Schedule[] = [];
-  recStore.curApplications.forEach((e) => {
-    const groupObj = {
-      date: new Date(e.interview_allocations_group?.date as string),
-      name: `${e.group}组面(${e.user_detail?.name})`,
-      time: transformedTime(
-        e.interview_allocations_group!.start,
-        e.interview_allocations_group!.end,
-      ),
-    };
+  const validYear = 2000;
+  recStore.curApplications.forEach((app) => {
+    if (
+      new Date(app.interview_allocations_group!.start).getFullYear() > validYear
+    ) {
+      const groupObj = {
+        date: new Date(app.interview_allocations_group?.date as string),
+        name: `${app.group}组面(${app.user_detail?.name})`,
+        time: transformedTime(
+          app.interview_allocations_group!.start,
+          app.interview_allocations_group!.end,
+        ),
+      };
+      schedule.push(groupObj);
+    }
 
-    const teamObj = {
-      date: new Date(e.interview_allocations_team?.date as string),
-      name: `${e.group}群面(${e.user_detail?.name})`,
-      time: transformedTime(
-        e.interview_allocations_team!.start,
-        e.interview_allocations_team!.end,
-      ),
-    };
-
-    schedule.push(groupObj, teamObj);
+    if (
+      new Date(app.interview_allocations_team!.start).getFullYear() > validYear
+    ) {
+      const teamObj = {
+        date: new Date(app.interview_allocations_team?.date as string),
+        name: `${app.group}群面(${app.user_detail?.name})`,
+        time: transformedTime(
+          app.interview_allocations_team!.start,
+          app.interview_allocations_team!.end,
+        ),
+      };
+      schedule.push(teamObj);
+    }
   });
+  schedule.sort((a, b) => {
+    const d = new Date(a.date).getTime() - new Date(b.date).getTime();
+    if (d !== 0) {
+      return d;
+    }
+
+    // 读取开始的小时和分钟
+    const t = (s: Schedule) =>
+      Number(s.time.substring(0, 2)) * 60 + Number(s.time.substring(3, 5));
+
+    return t(a) - t(b);
+  });
+
   return schedule;
 });
 
