@@ -189,6 +189,8 @@
     :current-group="currentGroup"
     :filtered-apps="filteredAndSortedApps"
     :merged-time-ranges="mergedTimeRanges"
+    :filtered-interviews="filteredInterviews"
+    :interview-id-set="interviewIdSet"
   />
   <!-- 分配选手面试时间弹窗 -->
 </template>
@@ -277,6 +279,22 @@ const filteredAndSortedApps = computed(() =>
     }),
 );
 
+// 当前组下所有可选的面试
+const filteredInterviews = computed(() =>
+  interviewType.value === InterviewType.Group
+    ? recStore.curInterviews.filter((item) => item.name === currentGroup.value)
+    : recStore.curInterviews.filter((item) => item.name === 'unique'),
+);
+
+// 所有可选面试的 Id
+const interviewIdSet = computed(() => {
+  const m = new Set<string>();
+  filteredInterviews.value.forEach((inte) => {
+    m.add(inte.uid);
+  });
+  return m;
+});
+
 const mergedTimeRanges = computed(() => {
   const raw: timeRangesType[] = [];
   filteredAndSortedApps.value.forEach((app) => {
@@ -315,10 +333,16 @@ const data = computed(() =>
     };
     if (
       ret.interviewTime === t('common.status.waitForDistribution') &&
-      app.interview_selections &&
-      app.interview_selections.length !== 0
+      app.interview_selections
     ) {
-      ret.name = `💡${ret.name}`;
+      const isNew =
+        app.interview_selections?.some((se) =>
+          interviewIdSet.value.has(se.uid),
+        ) ?? false;
+
+      if (isNew) {
+        ret.name = `💡${ret.name}`;
+      }
     }
 
     return ret;

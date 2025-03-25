@@ -64,6 +64,7 @@ import dayjs from 'dayjs';
 import { Group } from '@/constants/team';
 import { Application } from '@/constants/httpMsg/application/getApplicationMsg';
 import { isOverlappingWithAny, timeRangesType } from '@/utils/isOverlapping';
+import { Interview } from '@/constants/httpMsg/interview/getInterviewMsg';
 
 const { t } = useI18n();
 const { widthType } = useWindowResize();
@@ -94,6 +95,15 @@ const props = defineProps({
     default: () => [],
     required: true,
   },
+  filteredInterviews: {
+    type: Array as PropType<Interview[]>,
+    default: () => [],
+    required: true,
+  },
+  interviewIdSet: {
+    type: Set,
+    required: true,
+  },
 });
 
 const showAllowcate = defineModel<boolean>('showAllowcate', {
@@ -107,12 +117,6 @@ const form = ref<{
 }>({ selectInterviewId: '' });
 const recStore = useRecruitmentStore();
 
-const filteredInterviews = computed(() =>
-  props.interviewType === 'group'
-    ? recStore.curInterviews.filter((item) => item.name === props.currentGroup)
-    : recStore.curInterviews.filter((item) => item.name === 'unique'),
-);
-
 const optionsData = computed(() => {
   // 面试分类 date->period->time
   // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -120,7 +124,7 @@ const optionsData = computed(() => {
     [key: string]: { [key: string]: { time: string; interviewId: string }[] };
   };
 
-  filteredInterviews.value.forEach((interview) => {
+  props.filteredInterviews.forEach((interview) => {
     if (interview.start && interview.period) {
       const date = dayjs(interview.start).format('YYYY-MM-DD');
       const time = `${dayjs(interview.start).format('HH:mm')}
@@ -179,6 +183,10 @@ const selectedTime = computed(() => {
   );
   return (
     nowApplication?.interview_selections
+      // 过滤不是当前的面试，主要由于组面和群面的 interviewSelections 是同一个
+      ?.filter((interview_selection) =>
+        props.interviewIdSet.has(interview_selection.uid),
+      )
       ?.map((interview) => ({
         formatedTime: `${dayjs(interview.start).format('YYYY-MM-DD')} ${dayjs(
           interview.start,
