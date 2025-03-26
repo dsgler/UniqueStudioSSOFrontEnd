@@ -29,54 +29,58 @@
         />
       </a-form-item>
 
-      <div class="flex sm:gap-2 justify-between w-full max-sm:flex-col">
-        <a-form-item
-          class="max-sm:mb-3"
-          field="next"
-          :label="$t('common.user.nextStage')"
-          asterisk-position="end"
-          validate-trigger="change"
-        >
-          <a-select v-model:model-value="formData.next">
-            <a-option
-              v-for="item in nextValidSteps"
-              :key="item"
-              :value="item"
-              :title="$t(`common.steps.${item}`)"
-              >{{ $t(`common.steps.${item}`) }}</a-option
-            >
-          </a-select>
-        </a-form-item>
+      <template v-if="props.type !== 'Reject'">
+        <div class="flex sm:gap-2 justify-between w-full max-sm:flex-col">
+          <a-form-item
+            class="max-sm:mb-3"
+            field="next"
+            :label="$t('common.user.nextStage')"
+            asterisk-position="end"
+            validate-trigger="change"
+          >
+            <a-select v-model:model-value="formData.next">
+              <a-option
+                v-for="item in nextValidSteps"
+                :key="item"
+                :value="item"
+                :title="$t(`common.steps.${item}`)"
+                >{{ $t(`common.steps.${item}`) }}</a-option
+              >
+            </a-select>
+          </a-form-item>
 
-        <a-form-item
-          class="max-sm:mb-3"
-          field="time"
-          :disabled="!preview.notDisable.includes('time')"
-          :label="$t('common.time')"
-          asterisk-position="end"
-          validate-trigger="change"
-        >
-          <a-date-picker
-            v-model="formData.time"
-            show-time
-            format="YYYY-MM-DD HH:mm"
-            value-format="YYYY-MM-DD HH:mm:00"
-          />
-        </a-form-item>
+          <a-form-item
+            class="max-sm:mb-3"
+            field="time"
+            :disabled="!preview.notDisable.includes('time')"
+            :label="$t('common.time')"
+            asterisk-position="end"
+            validate-trigger="change"
+          >
+            <a-date-picker
+              v-model="formData.time"
+              show-time
+              format="YYYY-MM-DD HH:mm"
+              value-format="YYYY-MM-DD HH:mm:00"
+            />
+          </a-form-item>
 
-        <a-form-item
-          class="max-sm:mb-3"
-          field="meeting_id"
-          :disabled="!preview.notDisable.includes('meeting_id')"
-          :label="$t('common.sms.meetingId')"
-          asterisk-position="end"
-          validate-trigger="change"
-        >
-          <a-input v-model="formData.meeting_id" />
-        </a-form-item>
-      </div>
+          <a-form-item
+            class="max-sm:mb-3"
+            field="meeting_id"
+            :disabled="!preview.notDisable.includes('meeting_id')"
+            :label="$t('common.sms.meetingId')"
+            asterisk-position="end"
+            validate-trigger="change"
+          >
+            <a-input v-model="formData.meeting_id" />
+          </a-form-item>
+        </div>
+      </template>
+
       <div class="flex gap-2 justify-between w-full flex-col sm:flex-row">
         <a-form-item
+          v-if="props.type !== 'Reject'"
           class="max-sm:mb-3"
           field="place"
           :disabled="!preview.notDisable.includes('place')"
