@@ -6,7 +6,11 @@
       }}</span>
       <a-dropdown>
         <div class="cursor-pointer text-[--color-text-1] text-base">
-          <span class="mr-1"> {{ currentGroup }} </span>
+          <span class="mr-1">
+            {{
+              currentGroup === allGroups ? allGroups.description : currentGroup
+            }}
+          </span>
           <icon-down />
         </div>
         <template #content>
@@ -15,7 +19,7 @@
             :key="item"
             @click="handleGroupClick(item)"
           >
-            {{ item }}
+            {{ item === allGroups ? allGroups.description : item }}
           </a-doption>
         </template>
       </a-dropdown>
@@ -81,6 +85,7 @@ import router from '@/router';
 import { Group } from '@/constants/team';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import allGroups from '../allGroups';
 
 interface CandidateInfo {
   name: string;
@@ -96,13 +101,17 @@ const props = defineProps<{
 
 const { t } = useI18n();
 
-const currentGroup = defineModel<Group>({
+const currentGroup = defineModel<Group | typeof allGroups>({
   required: true,
 });
 
-const groups = computed(() =>
-  Object.values(Group).filter((x) => x !== Group.Unique),
-);
+const groups = computed(() => {
+  const ret: (Group | typeof allGroups)[] = Object.values(Group).filter(
+    (x) => x !== Group.Unique,
+  );
+  ret.unshift(allGroups);
+  return ret;
+});
 
 const goManagement = () => {
   router.push({ name: 'interviewMangement' });

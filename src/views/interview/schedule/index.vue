@@ -25,6 +25,7 @@ import useRecruitmentStore from '@/store/modules/recruitment';
 import dayjs from 'dayjs';
 import calender from './components/calendar.vue';
 import schedules from './components/schedules.vue';
+import allGroups from './allGroups';
 
 // 格式化日期
 const formatToday = (date: Date) => {
@@ -55,7 +56,7 @@ function Duration(start: Date, end: Date) {
 }
 
 provide('formatToday', formatToday);
-const currentGroup = ref(Group.Web);
+const currentGroup = ref<Group | typeof allGroups>(allGroups);
 const selectedDate = ref<string>('2024-01-01');
 const recStore = useRecruitmentStore();
 
@@ -105,7 +106,12 @@ const filteredApps = computed(() =>
         step === 'GroupInterview'
           ? selectedDate.value === formatDate(groupStartDate)
           : selectedDate.value === formatDate(teamStartDate);
-      const isGroup = group === currentGroup.value;
+      let isGroup: boolean;
+      if (currentGroup.value === allGroups) {
+        isGroup = true;
+      } else {
+        isGroup = group === currentGroup.value;
+      }
       return isStep && isGroup && isTime;
     },
   ),
