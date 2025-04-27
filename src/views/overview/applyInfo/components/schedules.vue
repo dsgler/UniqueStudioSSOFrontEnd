@@ -14,7 +14,7 @@
       <li
         v-for="date in recents"
         :key="date.toDateString()"
-        class="block list-none ml-5"
+        class="flex list-none ml-5 flex-col"
       >
         <div
           v-if="
@@ -22,6 +22,7 @@
               (schedule) => schedule.date.getTime() === date.getTime(),
             )
           "
+          class="flex flex-col"
         >
           <div class="text-[--color-text-1] mt-5 ml-5 sm:text-lg">
             {{ date.getMonth() + 1 }}.{{ date.getDate() }}
@@ -29,9 +30,9 @@
           <li
             v-for="schedule in filteredDateSchedules(date, true)"
             :key="schedule.name"
-            class="block list-none p-3"
+            class="flex list-none p-3 flex-wrap items-center"
           >
-            <div class="flex justify-between">
+            <div class="flex justify-between items-center flex-row grow">
               <div class="flex items-center">
                 <div
                   class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 mr-3 flex items-center justify-center"
@@ -42,7 +43,7 @@
                   schedule.name
                 }}</span>
               </div>
-              <span class="text-blue-600 mr-8 mt-4">{{ schedule.time }}</span>
+              <span class="text-blue-600">{{ schedule.time }}</span>
             </div>
           </li>
         </div>
@@ -61,7 +62,7 @@
     v-model:visible="visible"
     :closable="false"
     :hide-cancel="true"
-    :modal-style="{ maxHeight: '700px', overflowY: 'scroll' }"
+    :modal-style="{ maxHeight: 'min(700px,90vh)', overflowY: 'scroll' }"
   >
     <div class="text-[--color-text-1] text-xl font-bold ml-5">{{
       $t('common.applyInfo.recentSchedules')
@@ -70,7 +71,7 @@
       <li
         v-for="date in recents"
         :key="date.toDateString()"
-        class="block list-none ml-5 mb-6"
+        class="flex flex-col list-none ml-5 mb-6"
       >
         <div
           v-if="
@@ -78,6 +79,7 @@
               (schedule) => schedule.date.getTime() === date.getTime(),
             )
           "
+          class="flex flex-col"
         >
           <div class="text-[--color-text-1] mt-5 ml-5 text-lg">
             {{ date.getMonth() + 1 }}.{{ date.getDate() }}
@@ -85,15 +87,17 @@
           <li
             v-for="schedule in filteredDateSchedules(date, false)"
             :key="schedule.name"
-            class="block list-none p-7"
+            class="flex flex-row list-none p-3 justify-between flex-wrap"
           >
-            <div class="w-10 h-10 rounded-full border-2 float-left mr-3 p-2">
-              <icon-calendar class="text-xl" />
+            <div class="flex flex-row grow items-center">
+              <div class="w-10 h-10 rounded-full border-2 mr-3 p-2">
+                <icon-calendar class="text-xl" />
+              </div>
+              <span class="text-lg mt-1 text-[--color-text-1]">{{
+                schedule.name
+              }}</span>
             </div>
-            <span class="text-lg float-left mt-1 text-[--color-text-1]">{{
-              schedule.name
-            }}</span>
-            <span class="text-blue-600 float-right mt-3">{{
+            <span class="text-blue-600 mt-3 grow text-right">{{
               schedule.time
             }}</span>
           </li>
