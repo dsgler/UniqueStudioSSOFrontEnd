@@ -13,6 +13,7 @@ interface Statistics {
   lab?: number;
   pm?: number;
   web?: number;
+  blockchain?: number;
 }
 
 export interface GroupDetails {
@@ -25,6 +26,7 @@ export interface GroupDetails {
   lab?: number;
   pm?: number;
   web?: number;
+  blockchain?: number;
 }
 
 export interface Recruitment {

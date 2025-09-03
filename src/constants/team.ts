@@ -39,6 +39,7 @@ export enum Group {
   Design = 'design',
   PM = 'pm',
   Unique = 'unique', // for team interview
+  Blockchain = 'blockchain',
 }
 
 export const groupMapping = {
@@ -49,6 +50,7 @@ export const groupMapping = {
   Web: Group.Web,
   Lab: Group.Lab,
   Game: Group.Game,
+  Blockchain: Group.Blockchain,
 };
 
 export enum Evaluation {
